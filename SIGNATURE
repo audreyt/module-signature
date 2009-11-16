@@ -1,0 +1,49 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.60.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 0b722678d07c66ef6992f2cc2c9e9acf3bef0ecb AUDREY2006.pub
+SHA1 1e2b550757ebdf3ef2c0e8d1d06bcbb9c6b62a6f AUTHORS
+SHA1 938da9cd3294843ea703ad4f83b8dc9c9dc4cd13 Changes
+SHA1 2758c5d6b419c1fb0e06b2752bb871635c426392 MANIFEST
+SHA1 380629e3109b106f8d013376d5d56b9ec6815900 META.yml
+SHA1 a147c655a30fe3fd8c7b9fc2b37b74730b9c90c8 Makefile.PL
+SHA1 37e858c51409a297ef5d3fb35dc57cd3b57f9a4d PAUSE2003.pub
+SHA1 b5ecf1062331657b7ce40cdbef7cd23581e4f1b4 README
+SHA1 e5fb92ac217988bfc7a6af739b0459627020a27e inc/Module/AutoInstall.pm
+SHA1 fd5f3c4f0418efee3b9b16cf8c3902e8374909df inc/Module/Install.pm
+SHA1 5c529e96420d964b192f011b121283a4916f7331 inc/Module/Install/AutoInstall.pm
+SHA1 7cd7c349afdf3f012e475507b1017bdfa796bfbd inc/Module/Install/Base.pm
+SHA1 ba186541bbf6439111f01fc70769cf24d22869bf inc/Module/Install/Can.pm
+SHA1 a9d6306080cee9c32b18f6cbd3c7636ece67e81a inc/Module/Install/External.pm
+SHA1 aaa50eca0d7751db7a4d953fac9bc72c6294e238 inc/Module/Install/Fetch.pm
+SHA1 219da5a95c290312a81477b226f005997d97dcfd inc/Module/Install/Include.pm
+SHA1 3e83972921d54198d1246f7278f08664006cd65d inc/Module/Install/Makefile.pm
+SHA1 12bf1867955480d47d5171a9e9c6a96fabe0b58f inc/Module/Install/Metadata.pm
+SHA1 a615bb050ca0b2d79bfa0224addcb83019a53b09 inc/Module/Install/ReadmeFromPod.pm
+SHA1 3406c9015148c75406903e7382f8182613b5022a inc/Module/Install/Scripts.pm
+SHA1 f7ee667e878bd2faf22ee9358a7b5a2cc8e91ba4 inc/Module/Install/Win32.pm
+SHA1 8ed29d6cf217e0977469575d788599cbfb53a5ca inc/Module/Install/WriteAll.pm
+SHA1 df3decb228e7f65dfaf296ed40ffd84ee3a56988 lib/Module/Signature.pm
+SHA1 0882c50213a28b7a30fc91fd58c19015f33348d0 script/cpansign
+SHA1 4aeb184c9bed26ab6c3be1ebdb8470c0cb353b1f t/0-signature.t
+SHA1 307a744384e704d94031df73233f24174b843bc8 t/1-basic.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (Darwin)
+
+iEYEARECAAYFAksBZ5EACgkQtLPdNzw1AaDX+wCeI89qsRlgjNS030AF/x815eqJ
+s60An3MuNp2wx0hcA4jUvZwRhwT/e+9j
+=rJ+M
+-----END PGP SIGNATURE-----
