@@ -2,8 +2,8 @@ NAME
     Module::Signature - Module signature file manipulation
 
 VERSION
-    This document describes version 0.60 of Module::Signature, released
-    November 16, 2009.
+    This document describes version 0.61 of Module::Signature, released
+    November 18, 2009.
 
 SYNOPSIS
     As a shell command:

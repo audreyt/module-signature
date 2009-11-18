@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.60';
+$Module::Signature::VERSION = '0.61';
 
 use 5.005;
 use strict;
@@ -557,14 +557,16 @@ sub _mkdigest_files {
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Module::Signature - Module signature file manipulation
 
 =head1 VERSION
 
-This document describes version 0.60 of B<Module::Signature>,
-released November 16, 2009.
+This document describes version 0.61 of B<Module::Signature>,
+released November 18, 2009.
 
 =head1 SYNOPSIS
 

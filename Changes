@@ -1,3 +1,8 @@
+[Changes for 0.61 - 2009年11月19日 周四 00時56分41秒 CST]
+
+* Added "=encoding utf8" to POD to fix author name display.
+  No functional changes.
+
 [Changes for 0.60 - 2009年11月16日 周一 22時48分54秒 CST]
 
 * LICENSING CHANGE: This compilation and all individual files in it
