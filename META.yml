@@ -3,13 +3,14 @@ abstract: 'Module signature file manipulation'
 author:
   - '唐鳳 <cpan@audreyt.org>'
 build_requires:
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.36
   IPC::Run: 0
   Test::More: 0
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.36
 distribution_type: module
-generated_by: 'Module::Install version 1.00'
+dynamic_config: 1
+generated_by: 'Module::Install version 1.06'
 license: cc0
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -24,4 +25,4 @@ requires:
   perl: 5.005
 resources:
   repository: http://github.com/audreyt/module-signature
-version: 0.68
+version: 0.69
