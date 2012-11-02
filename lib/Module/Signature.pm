@@ -131,7 +131,8 @@ sub _verify {
 }
 
 sub _has_gpg {
-    `gpg --version` =~ /GnuPG.*?(\S+)$/m or return;
+    my $gpg = _which_gpg();
+    `$gpg --version` =~ /GnuPG.*?(\S+)$/m or return;
     return $1;
 }
 
@@ -190,6 +191,19 @@ sub _default_skip {
              or /~$/ or /\.old$/ or /\#$/ or /^\.#/;
 }
 
+my $which_gpg;
+sub _which_gpg {
+    # Cache it so we don't need to keep checking.
+    return $which_gpg if $which_gpg;
+
+    for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
+        if( can_run($gpg_bin) ) {
+            $which_gpg = $gpg_bin;
+            return $which_gpg;
+        }
+    }
+}
+
 sub _verify_gpg {
     my ($sigtext, $plaintext, $version) = @_;
 
@@ -198,9 +212,10 @@ sub _verify_gpg {
 
     my $keyserver = _keyserver($version);
 
+    my $gpg = _which_gpg();
     my @quiet = $Verbose ? () : qw(-q --logger-fd=1);
     my @cmd = (
-        qw(gpg --verify --batch --no-tty), @quiet, ($KeyServer ? (
+        qw($gpg --verify --batch --no-tty), @quiet, ($KeyServer ? (
             "--keyserver=$keyserver",
             ($AutoKeyRetrieve and $version ge '1.0.7')
                 ? '--keyserver-options=auto-key-retrieve'
@@ -357,8 +372,10 @@ sub _sign_gpg {
     die "Could not write to $sigfile"
         if -e $sigfile and (-d $sigfile or not -w $sigfile);
 
+    my $gpg = _which_gpg();
+
     local *D;
-    open D, "| gpg --clearsign >> $sigfile.tmp" or die "Could not call gpg: $!";
+    open D, "| $gpg --clearsign >> $sigfile.tmp" or die "Could not call $gpg: $!";
     print D $plaintext;
     close D;
 
@@ -387,7 +404,7 @@ sub _sign_gpg {
     # This doesn't work because the output from verify goes to STDERR.
     # If I try to redirect it using "--logger-fd 1" it just hangs.
     # WTF?
-    my @verify = `gpg --batch --verify $SIGNATURE`;
+    my @verify = `$gpg --batch --verify $SIGNATURE`;
     while (@verify) {
         if (/key ID ([0-9A-F]+)$/) {
             $key_id = $1;
@@ -400,7 +417,7 @@ sub _sign_gpg {
     my $found_key;
     if (defined $key_id && defined $key_name) {
         my $keyserver = _keyserver($version);
-        while (`gpg --batch --keyserver=$keyserver --search-keys '$key_name'`) {
+        while (`$gpg --batch --keyserver=$keyserver --search-keys '$key_name'`) {
             if (/^\(\d+\)/) {
                 $found_name = 0;
             } elsif ($found_name) {

@@ -1,3 +1,5 @@
+use strict;
+
 use inc::Module::Install;
 
 $|++;
@@ -66,10 +68,9 @@ if ( can_use('Crypt::OpenPGP') ) {
 	# dependencies so they will upgrade as needed.
 	requires( @OPEN_PGP );
 
-} elsif ( locate_gpg() ) {
+} elsif ( my $gpg = locate_gpg() ) {
 	# We SHOULD have gpg, double-check formally
-	requires_external_bin 'gpg';
-
+	requires_external_bin $gpg;
 } elsif ( can_cc() and $ENV{AUTOMATED_TESTING} ) {
 	# Dive headlong into a full Crypt::OpenPGP install.
 	requires( @OPEN_PGP );
@@ -99,29 +100,33 @@ sign; WriteAll;
 sub locate_gpg {
 	print "Looking for GNU Privacy Guard (gpg), a cryptographic signature tool...\n";
 
-	my $gpg = can_run('gpg');
-	my $has_gpg = (
-		$gpg and
-		`gpg --version` =~ /GnuPG/ and
-		defined `gpg --list-public-keys`
-	);
+	my($gpg, $gpg_path);
+	for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
+		$gpg_path = can_run($gpg_bin);
+		next unless $gpg_path;
+		next unless `$gpg_bin --version` =~ /GnuPG/;
+		next unless defined `$gpg_bin --list-public-keys`;
 
-	unless ( $has_gpg ) {
+		$gpg = $gpg_bin;
+		last;
+	}
+
+	unless ( $gpg ) {
 		print "gpg not found.\n";
 		return;
 	}
 
-	print "GnuPG found ($gpg).\n";
+	print "GnuPG found ($gpg_path).\n";
 
 	return 1 if grep { /^--installdeps/} @ARGV;
 
 	if ( prompt("Import PAUSE and author keys to GnuPG?", 'y' ) =~ /^y/i) {
 		print 'Importing... ';
-		system 'gpg', '--quiet', '--import', glob('*.pub');
+		system $gpg, '--quiet', '--import', glob('*.pub');
 		print "done.\n";
 	}
 
-	return 1;
+	return $gpg;
 }
 
 # Defined the prompt messages
