@@ -197,7 +197,8 @@ sub _which_gpg {
     return $which_gpg if $which_gpg;
 
     for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
-        if( can_run($gpg_bin) ) {
+        my $version = `$gpg_bin --version 2>&1`;
+        if( $version && $version =~ /GnuPG/ ) {
             $which_gpg = $gpg_bin;
             return $which_gpg;
         }
@@ -215,7 +216,7 @@ sub _verify_gpg {
     my $gpg = _which_gpg();
     my @quiet = $Verbose ? () : qw(-q --logger-fd=1);
     my @cmd = (
-        qw($gpg --verify --batch --no-tty), @quiet, ($KeyServer ? (
+        $gpg, qw(--verify --batch --no-tty), @quiet, ($KeyServer ? (
             "--keyserver=$keyserver",
             ($AutoKeyRetrieve and $version ge '1.0.7')
                 ? '--keyserver-options=auto-key-retrieve'
