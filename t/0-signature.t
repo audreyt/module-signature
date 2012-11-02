@@ -18,7 +18,7 @@ elsif ( !-e 'SIGNATURE' ) {
 elsif ( -s 'SIGNATURE' == 0 ) {
     plan skip_all => "SIGNATURE file empty";
 }
-elsif (!eval { require Socket; Socket::inet_aton('pgp.mit.edu') }) {
+elsif (!eval { require Socket; Socket::inet_aton('pool.sks-keyservers.net') }) {
     plan skip_all => "Cannot connect to the keyserver to check module ".
                      "signature";
 }

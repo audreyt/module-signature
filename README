@@ -1,15 +1,11 @@
 NAME
     Module::Signature - Module signature file manipulation
 
-VERSION
-    This document describes version 0.62 of Module::Signature, released
-    November 2, 2012.
-
 SYNOPSIS
     As a shell command:
 
         % cpansign              # verify an existing SIGNATURE, or
-                                # make a new one if none exists 
+                                # make a new one if none exists
 
         % cpansign sign         # make signature; overwrites existing one
         % cpansign -s           # same thing
@@ -222,7 +218,7 @@ NOTES
                     "Next time around, consider install Module::Signature, ",
                     "so you can verify the integrity of this distribution.\n";
         }
-        elsif (!eval { require Socket; Socket::inet_aton('pgp.mit.edu') }) {
+        elsif (!eval { require Socket; Socket::inet_aton('pool.sks-keyservers.net') }) {
             print "ok 1 # skip ",
                     "Cannot connect to the keyserver\n";
         }

@@ -1,6 +1,5 @@
 use strict;
-
-use inc::Module::Install;
+use inc::Module::Install 0.92;
 
 $|++;
 
@@ -10,7 +9,7 @@ all_from        'lib/Module/Signature.pm';
 readme_from     'lib/Module/Signature.pm';
 repository      'http://github.com/audreyt/module-signature';
 install_script  'script/cpansign';
-build_requires  'Test::More';
+build_requires  'Test::More', 0, 'IPC::Run', 0;
 
 # On Win32 (excluding cygwin) we know that IO::Socket::INET,
 # which is needed for keyserver stuff, doesn't work. In fact
@@ -87,7 +86,6 @@ unless ( can_run('diff') ) {
 	}
 }
 
-auto_install;
 sign; WriteAll;
 
 
@@ -100,18 +98,17 @@ sign; WriteAll;
 sub locate_gpg {
 	print "Looking for GNU Privacy Guard (gpg), a cryptographic signature tool...\n";
 
-	my($gpg, $gpg_path);
-	for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
-		$gpg_path = can_run($gpg_bin);
-		next unless $gpg_path;
-		next unless `$gpg_bin --version` =~ /GnuPG/;
-		next unless defined `$gpg_bin --list-public-keys`;
-
-		$gpg = $gpg_bin;
-		last;
-	}
-
-	unless ( $gpg ) {
+  	my ($gpg, $gpg_path);
+  	for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
+  		$gpg_path = can_run($gpg_bin);
+  		next unless $gpg_path;
+  		next unless `$gpg_bin --version` =~ /GnuPG/;
+  		next unless defined `$gpg_bin --list-public-keys`;
+  
+  		$gpg = $gpg_bin;
+  		last;
+  	}
+  	unless ( $gpg ) {
 		print "gpg not found.\n";
 		return;
 	}
@@ -126,11 +123,13 @@ sub locate_gpg {
 		print "done.\n";
 	}
 
-	return $gpg;
+ 	return $gpg;
 }
 
-# Defined the prompt messages
-my $message1 = <<'END_MESSAGE';
+sub ask_user {
+
+    # Defined the prompt messages
+    my $message1 = <<'END_MESSAGE';
 
 Could not auto-detect a signature utility on your system.
 
@@ -142,14 +141,13 @@ What do you want me to do?
 
 END_MESSAGE
 
-my $message2 = <<'END_MESSAGE';
+    my $message2 = <<'END_MESSAGE';
 
 2) Automatically install Crypt::OpenPGP and the 20 modules it requires
    from CPAN, which will give the same functionality as GnuPG.
 
 END_MESSAGE
 
-sub ask_user {
 	# Present the options
 	print $message1;
 
@@ -181,6 +179,6 @@ END_MESSAGE
 	} else {
 		# Forget about it...
 		print "Module::Signature is not wanted on this host.\n";
-		exit(255);
+		exit(0);
 	}
 }

@@ -1,14 +1,11 @@
 AUDREY2006.pub
 AUTHORS
 Changes
-inc/Module/AutoInstall.pm
 inc/Module/Install.pm
-inc/Module/Install/AutoInstall.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
 inc/Module/Install/External.pm
 inc/Module/Install/Fetch.pm
-inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
 inc/Module/Install/Metadata.pm
 inc/Module/Install/ReadmeFromPod.pm
@@ -18,10 +15,15 @@ inc/Module/Install/WriteAll.pm
 lib/Module/Signature.pm
 Makefile.PL
 MANIFEST			This list of files
+MANIFEST.SKIP
 META.yml
 PAUSE2003.pub
 README
 script/cpansign
-SIGNATURE			Public-key signature (added by MakeMaker)
+SIGNATURE
 t/0-signature.t
 t/1-basic.t
+t/2-cygwin.t
+t/3-verify.t
+t/wrap.pl
+t/wrapped-tests.bin

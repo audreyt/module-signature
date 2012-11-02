@@ -1,10 +1,44 @@
-[Changes for 0.62 - Fri Nov  2 20:59:28 CST 2012]
+[Changes for 0.69 - Fri Nov  2 23:04:19 CST 2012]
 
 * Support for gpg under these alternate names:
 
     gpg gpg2 gnupg gnupg2
 
   Contributed by: Michael Schwern
+
+[Changes for 0.68 - Fri, 13 May 2011 11:51:50 +0200]
+
+* Fix breakage introduced by 0.67 (Andreas König).
+
+[Changes for 0.67 - Sun, 17 Apr 2011 16:29:23 +0200]
+
+* Better handling of \r (Andreas König, Zefram) (Closes RT#46339).
+
+[Changes for 0.66 - Fri,  6 Sep 2010 22:51:37 +0200]
+
+* Fix incompatibility with EU::Manifest 1.54 to 1.57
+  (Paul Howarth) (Closes RT#61124).
+
+[Changes for 0.65 - Fri,  3 Sep 2010 21:38:02 +0200]
+
+* Skip MYMETA (Alexandr Ciornii)
+
+[Changes for 0.64 - Sun,  9 May 2010 00:50:11 +0200]
+
+* Avoid creating gnupg configuration files for the user invoking Makefile.PL
+  (Closes RT#41978).
+* Correctly detect the version of gnupg on cygwin and add tests for it
+  (Paul Fenwick) (Closes RT#39258).
+
+[Changes for 0.63 - Sun, 28 Mar 2010 04:46:27 +0100]
+
+* Fix diagnostic message from Makefile.PL when the user dosn't have gnupg or
+  Crypt::OpenPGP (miyagawa).
+
+[Changes for 0.62 - Tue, 23 Mar 2010 22:17:39 +0100]
+
+* Change the default keyserver from the outdated pgp.mit.edu to
+  pool.sks-keyservers.net.
 
 [Changes for 0.61 - 2009年11月19日 周四 00時56分41秒 CST]
 

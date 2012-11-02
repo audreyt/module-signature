@@ -6,7 +6,7 @@ use Module::Install::Base ();
 
 use vars qw{$VERSION @ISA $ISCORE};
 BEGIN {
-	$VERSION = '1.06';
+	$VERSION = '1.00';
 	@ISA     = 'Module::Install::Base';
 	$ISCORE  = 1;
 }
@@ -151,19 +151,13 @@ sub install_as_site   { $_[0]->installdirs('site')   }
 sub install_as_vendor { $_[0]->installdirs('vendor') }
 
 sub dynamic_config {
-	my $self  = shift;
-	my $value = @_ ? shift : 1;
-	if ( $self->{values}->{dynamic_config} ) {
-		# Once dynamic we never change to static, for safety
-		return 0;
+	my $self = shift;
+	unless ( @_ ) {
+		warn "You MUST provide an explicit true/false value to dynamic_config\n";
+		return $self;
 	}
-	$self->{values}->{dynamic_config} = $value ? 1 : 0;
+	$self->{values}->{dynamic_config} = $_[0] ? 1 : 0;
 	return 1;
-}
-
-# Convenience command
-sub static_config {
-	shift->dynamic_config(0);
 }
 
 sub perl_version {
@@ -176,7 +170,7 @@ sub perl_version {
 	# Normalize the version
 	$version = $self->_perl_version($version);
 
-	# We don't support the really old versions
+	# We don't support the reall old versions
 	unless ( $version >= 5.005 ) {
 		die "Module::Install only supports 5.005 or newer (use ExtUtils::MakeMaker)\n";
 	}
@@ -521,7 +515,6 @@ sub __extract_license {
 		'GNU Free Documentation license'     => 'unrestricted', 1,
 		'GNU Affero General Public License'  => 'open_source',  1,
 		'(?:Free)?BSD license'               => 'bsd',          1,
-		'Artistic license 2\.0'              => 'artistic_2',   1,
 		'Artistic license'                   => 'artistic',     1,
 		'Apache (?:Software )?license'       => 'apache',       1,
 		'GPL'                                => 'gpl',          1,
@@ -557,9 +550,9 @@ sub license_from {
 
 sub _extract_bugtracker {
 	my @links   = $_[0] =~ m#L<(
-	 https?\Q://rt.cpan.org/\E[^>]+|
-	 https?\Q://github.com/\E[\w_]+/[\w_]+/issues|
-	 https?\Q://code.google.com/p/\E[\w_\-]+/issues/list
+	 \Qhttp://rt.cpan.org/\E[^>]+|
+	 \Qhttp://github.com/\E[\w_]+/[\w_]+/issues|
+	 \Qhttp://code.google.com/p/\E[\w_\-]+/issues/list
 	 )>#gx;
 	my %links;
 	@links{@links}=();
@@ -588,7 +581,7 @@ sub bugtracker_from {
 sub requires_from {
 	my $self     = shift;
 	my $content  = Module::Install::_readperl($_[0]);
-	my @requires = $content =~ m/^use\s+([^\W\d]\w*(?:::\w+)*)\s+(v?[\d\.]+)/mg;
+	my @requires = $content =~ m/^use\s+([^\W\d]\w*(?:::\w+)*)\s+([\d\.]+)/mg;
 	while ( @requires ) {
 		my $module  = shift @requires;
 		my $version = shift @requires;
