@@ -1,3 +1,12 @@
+[Changes for 0.70 - Thu Nov 29 01:45:54 CST 2012]
+
+* Don't check gpg version if gpg does not exist.
+
+  This avoids unnecessary warnings during installation
+  when gpg executable is not installed.
+
+  Contributed by: Kenichi Ishigaki
+
 [Changes for 0.69 - Fri Nov  2 23:04:19 CST 2012]
 
 * Support for gpg under these alternate names:
