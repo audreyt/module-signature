@@ -143,7 +143,7 @@ sub _verify {
 }
 
 sub _has_gpg {
-    my $gpg = _which_gpg();
+    my $gpg = _which_gpg() or return;
     `$gpg --version` =~ /GnuPG.*?(\S+)\s*$/m or return;
     return $1;
 }
