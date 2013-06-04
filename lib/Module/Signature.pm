@@ -941,6 +941,8 @@ L<ExtUtils::Manifest>, L<Crypt::OpenPGP>, L<Test::Signature>
 
 L<Module::Install>, L<ExtUtils::MakeMaker>, L<Module::Build>
 
+L< Dist::Zilla::Plugin::Signature>
+
 =head1 AUTHORS
 
 唐鳳 E<lt>cpan@audreyt.orgE<gt>
