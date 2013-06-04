@@ -25,4 +25,4 @@ requires:
   perl: 5.005
 resources:
   repository: http://github.com/audreyt/module-signature
-version: 0.70
+version: 0.71

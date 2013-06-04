@@ -1,3 +1,11 @@
+[Changes for 0.71 - Tue Jun  4 18:24:10 CST 2013]
+
+* Constrain the user-specified digest name to /^\w+\d+$/.
+
+* Avoid loading Digest::* from relative paths in @INC.
+
+  Contributed by: Florian Weimer
+
 [Changes for 0.70 - Thu Nov 29 01:45:54 CST 2012]
 
 * Don't check gpg version if gpg does not exist.

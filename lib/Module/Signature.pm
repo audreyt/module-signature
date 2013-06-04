@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.70';
+$Module::Signature::VERSION = '0.71';
 
 use 5.005;
 use strict;
@@ -532,18 +532,23 @@ sub _mkdigest {
 
 sub _digest_object {
     my($algorithm) = @_;
+
+    # Avoid loading Digest::* from relative paths in @INC.
+    local @INC = grep { /^[^.]/ } @INC;
+
+    # Constrain algorithm name to be of form ABC123.
+    my ($base, $variant) = ($algorithm =~ /^([_a-zA-Z]+)([0-9]+)$/g)
+        or die "Malformed algorithm name: $algorithm (should match /\\w+\\d+/)";
+
     my $obj = eval { Digest->new($algorithm) } || eval {
-        my ($base, $variant) = ($algorithm =~ /^(\w+?)(\d+)$/g) or die;
         require "Digest/$base.pm"; "Digest::$base"->new($variant)
     } || eval {
         require "Digest/$algorithm.pm"; "Digest::$algorithm"->new
     } || eval {
-        my ($base, $variant) = ($algorithm =~ /^(\w+?)(\d+)$/g) or die;
         require "Digest/$base/PurePerl.pm"; "Digest::$base\::PurePerl"->new($variant)
     } || eval {
         require "Digest/$algorithm/PurePerl.pm"; "Digest::$algorithm\::PurePerl"->new
     } or do { eval {
-        my ($base, $variant) = ($algorithm =~ /^(\w+?)(\d+)$/g) or die;
         warn "Unknown cipher: $algorithm, please install Digest::$base, Digest::$base$variant, or Digest::$base\::PurePerl\n";
     } and return } or do {
         warn "Unknown cipher: $algorithm, please install Digest::$algorithm\n"; return;
