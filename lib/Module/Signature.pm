@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.72';
+$Module::Signature::VERSION = '0.73';
 
 use 5.005;
 use strict;
@@ -18,6 +18,7 @@ use constant CIPHER_UNKNOWN      => -6;
 
 use ExtUtils::Manifest ();
 use Exporter;
+use File::Spec;
 
 @EXPORT_OK      = (
     qw(sign verify),
@@ -534,7 +535,7 @@ sub _digest_object {
     my($algorithm) = @_;
 
     # Avoid loading Digest::* from relative paths in @INC.
-    local @INC = grep { m{^[\\/]} } @INC;
+    local @INC = grep { File::Spec->file_name_is_absolute($_) } @INC;
 
     # Constrain algorithm name to be of form ABC123.
     my ($base, $variant) = ($algorithm =~ /^([_a-zA-Z]+)([0-9]+)$/g)

@@ -1,9 +1,13 @@
+[Changes for 0.73 - Wed Jun  5 23:44:57 CST 2013]
+
+* Properly redo the previous fix using File::Spec->file_name_is_absolute.
+
 [Changes for 0.72 - Wed Jun  5 23:19:02 CST 2013]
 
 * Only allow loading Digest::* from absolute paths in @INC,
   by ensuring they begin with \ or / characters.
 
-  Contributed by: Florian Weimer
+  Contributed by: Florian Weimer (CVE-2013-2145)
 
 [Changes for 0.71 - Tue Jun  4 18:24:10 CST 2013]
 
@@ -11,7 +15,7 @@
 
 * Avoid loading Digest::* from relative paths in @INC.
 
-  Contributed by: Florian Weimer
+  Contributed by: Florian Weimer (CVE-2013-2145)
 
 [Changes for 0.70 - Thu Nov 29 01:45:54 CST 2012]
 
