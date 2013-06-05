@@ -245,6 +245,8 @@ SEE ALSO
 
     Module::Install, ExtUtils::MakeMaker, Module::Build
 
+    Dist::Zilla::Plugin::Signature
+
 AUTHORS
     唐鳳 <cpan@audreyt.org>
 

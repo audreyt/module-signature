@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.71';
+$Module::Signature::VERSION = '0.72';
 
 use 5.005;
 use strict;
@@ -534,7 +534,7 @@ sub _digest_object {
     my($algorithm) = @_;
 
     # Avoid loading Digest::* from relative paths in @INC.
-    local @INC = grep { /^[^.]/ } @INC;
+    local @INC = grep { m{^[\\/]} } @INC;
 
     # Constrain algorithm name to be of form ABC123.
     my ($base, $variant) = ($algorithm =~ /^([_a-zA-Z]+)([0-9]+)$/g)
