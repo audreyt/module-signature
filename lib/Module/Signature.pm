@@ -1,10 +1,10 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.73';
+$Module::Signature::VERSION = '0.73_01';
 
 use 5.005;
 use strict;
 use vars qw($VERSION $SIGNATURE @ISA @EXPORT_OK);
-use vars qw($Preamble $Cipher $Debug $Verbose $Timeout);
+use vars qw($Preamble $Cipher $Debug $Verbose $Timeout $AUTHOR);
 use vars qw($KeyServer $KeyServerPort $AutoKeyRetrieve $CanKeyRetrieve);
 
 use constant CANNOT_VERIFY       => '0E0';
@@ -27,6 +27,7 @@ use File::Spec;
 );
 @ISA            = 'Exporter';
 
+$AUTHOR         = $ENV{MODULE_SIGNATURE_AUTHOR};
 $SIGNATURE      = 'SIGNATURE';
 $Timeout        = $ENV{MODULE_SIGNATURE_TIMEOUT} || 3;
 $Verbose        = $ENV{MODULE_SIGNATURE_VERBOSE} || 0;
@@ -400,7 +401,9 @@ sub _sign_gpg {
     my $gpg = _which_gpg();
 
     local *D;
-    open D, "| $gpg --clearsign >> $sigfile.tmp" or die "Could not call $gpg: $!";
+    my $set_key = '';
+    $set_key = "--default-key $AUTHOR" if($AUTHOR);
+    open D, "| $gpg $set_key --clearsign >> $sigfile.tmp" or die "Could not call $gpg: $!";
     print D $plaintext;
     close D;
 
