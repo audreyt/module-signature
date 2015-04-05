@@ -10,6 +10,7 @@ readme_from     'lib/Module/Signature.pm';
 repository      'http://github.com/audreyt/module-signature';
 install_script  'script/cpansign';
 build_requires  'Test::More', 0, 'IPC::Run', 0;
+requires        'File::Temp';
 
 # On Win32 (excluding cygwin) we know that IO::Socket::INET,
 # which is needed for keyserver stuff, doesn't work. In fact
