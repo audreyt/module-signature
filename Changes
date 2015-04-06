@@ -1,3 +1,13 @@
+[Changes for 0.74 - Tue Apr  7 02:39:14 CST 2015]
+
+Fix various issues reported by John Lightsey:
+
+* Fix GPG signature parsing logic.
+
+* MANIFEST.SKIP is no longer consulted unless --skip is given.
+
+* Properly use open() modes to avoid injection attacks.
+
 [Changes for 0.73 - Wed Jun  5 23:44:57 CST 2013]
 
 * Properly redo the previous fix using File::Spec->file_name_is_absolute.
