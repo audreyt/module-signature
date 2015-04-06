@@ -119,6 +119,8 @@ sub _verify {
     my $sigtext   = shift || '';
     my $plaintext = shift || '';
 
+    # Avoid loading modules from relative paths in @INC.
+    local @INC = grep { File::Spec->file_name_is_absolute($_) } @INC;
     local $SIGNATURE = $signature if $signature ne $SIGNATURE;
 
     if ($AutoKeyRetrieve and !$CanKeyRetrieve) {
