@@ -1,3 +1,11 @@
+[Changes for 0.77 - Wed Apr  8 19:36:50 CST 2015]
+
+* Include the latest public keys of PAUSE, ANDK and AUDREYT.
+
+* Clarify scripts/cpansign copyright to CC0.
+
+  Reported by: @pghmcfc
+
 [Changes for 0.76 - Wed Apr  8 18:05:48 CST 2015]
 
 * Fix signature tests by defaulting to verify(skip=>1)
