@@ -1,3 +1,10 @@
+[Changes for 0.76 - Wed Apr  8 18:05:48 CST 2015]
+
+* Fix signature tests by defaulting to verify(skip=>1)
+  when $ENV{TEST_SIGNATURE} is true.
+
+  Reported by: @pghmcfc
+
 [Changes for 0.75 - Tue Apr  7 04:56:09 CST 2015]
 
 Two more issues reported by John Lightsey:

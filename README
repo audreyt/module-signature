@@ -234,6 +234,9 @@ NOTES
     version of t/0-signature.t can be found in the Module::Signature
     distribution.
 
+    Note that "MANIFEST.SKIP" is considered by default only when
+    $ENV{TEST_SIGNATURE} is set to a true value.
+
     Also, if you prefer a more full-fledged testing package, and are willing
     to inflict the dependency of Module::Build on your users, Iain
     Truskett's Test::Signature might be a better choice.

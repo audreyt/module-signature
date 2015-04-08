@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.75';
+$Module::Signature::VERSION = '0.76';
 
 use 5.005;
 use strict;
@@ -68,7 +68,7 @@ sub _cipher_map {
 }
 
 sub verify {
-    my %args = ( @_ );
+    my %args = ( skip => $ENV{TEST_SIGNATURE}, @_ );
     my $rv;
 
     (-r $SIGNATURE) or do {
@@ -948,6 +948,9 @@ You may add this code as F<t/0-signature.t> in your distribution tree:
 If you are already using B<Test::More> for testing, a more
 straightforward version of F<t/0-signature.t> can be found in the
 B<Module::Signature> distribution.
+
+Note that C<MANIFEST.SKIP> is considered by default only when
+C<$ENV{TEST_SIGNATURE}> is set to a true value.
 
 Also, if you prefer a more full-fledged testing package, and are
 willing to inflict the dependency of B<Module::Build> on your users,
