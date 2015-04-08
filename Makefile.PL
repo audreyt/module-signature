@@ -120,7 +120,7 @@ sub locate_gpg {
 
 	if ( prompt("Import PAUSE and author keys to GnuPG?", 'y' ) =~ /^y/i) {
 		print 'Importing... ';
-		system $gpg, '--quiet', '--import', glob('*.pub');
+		system $gpg, '--quiet', '--import', qw[ AUDREYT2015.pub ANDK2015.pub PAUSE2017.pub ];
 		print "done.\n";
 	}
 

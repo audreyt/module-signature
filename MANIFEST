@@ -1,4 +1,5 @@
-AUDREY2006.pub
+ANDK2015.pub
+AUDREY2015.pub
 AUTHORS
 Changes
 inc/Module/Install.pm
@@ -17,7 +18,7 @@ Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
-PAUSE2003.pub
+PAUSE2017.pub
 README
 script/cpansign
 SIGNATURE
