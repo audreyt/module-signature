@@ -1,3 +1,9 @@
+[Changes for 0.78 - Thu Apr  9 16:58:27 CST 2015]
+
+* Fix verify() use from cpanm and CPAN.pm.
+
+  Contributed by: ANDK
+
 [Changes for 0.77 - Wed Apr  8 19:36:50 CST 2015]
 
 * Include the latest public keys of PAUSE, ANDK and AUDREYT.

@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.77';
+$Module::Signature::VERSION = '0.78';
 
 use 5.005;
 use strict;
@@ -249,7 +249,7 @@ sub _verify_gpg {
 
     require File::Temp;
     my $fh = File::Temp->new();
-    print $fh $sigtext;
+    print $fh $sigtext || _read_sigfile($SIGNATURE);
     close $fh;
 
     my $gpg = _which_gpg();
