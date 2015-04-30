@@ -236,7 +236,11 @@ sub _which_gpg {
     return $which_gpg if $which_gpg;
 
     for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
-        my $version = `$gpg_bin --version 2>&1`;
+		my $D;
+		open $D, '-|', $gpg_bin, qw(--version --logger-fd 1) or
+		my @list = <$D>;
+		close $D;
+		my $version = join '', @list;
         if( $version && $version =~ /GnuPG/ ) {
             $which_gpg = $gpg_bin;
             return $which_gpg;
