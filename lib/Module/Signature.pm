@@ -279,11 +279,9 @@ sub _verify_gpg {
     }
     else {
         my $handle;
-        my @list;
         open $handle, '-|', @cmd;
-        while <$handle> {
-            push(@list, $_);
-        }
+        my @list = <$handle>;
+		close $handle;
         $output = join('', @list);
     }
     unlink $fh->filename;
