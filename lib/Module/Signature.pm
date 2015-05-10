@@ -33,7 +33,7 @@ $Timeout        = $ENV{MODULE_SIGNATURE_TIMEOUT} || 3;
 $Verbose        = $ENV{MODULE_SIGNATURE_VERBOSE} || 0;
 $KeyServer      = $ENV{MODULE_SIGNATURE_KEYSERVER} || 'pool.sks-keyservers.net';
 $KeyServerPort  = $ENV{MODULE_SIGNATURE_KEYSERVERPORT} || '11371';
-$Cipher         = $ENV{MODULE_SIGNATURE_CIPHER} || 'SHA1';
+$Cipher         = $ENV{MODULE_SIGNATURE_CIPHER} || 'SHA256';
 $Preamble       = << ".";
 This file contains message digests of all files listed in MANIFEST,
 signed via the Module::Signature module, version $VERSION.
@@ -760,15 +760,14 @@ Defaults to C<1>.
 =item $Cipher
 
 The default cipher used by the C<Digest> module to make signature
-files.  Defaults to C<SHA1>, but may be changed to other ciphers
-via the C<MODULE_SIGNATURE_CIPHER> environment variable if the SHA1
+files.  Defaults to C<SHA256>, but may be changed to other ciphers
+via the C<MODULE_SIGNATURE_CIPHER> environment variable if the SHA256
 cipher is undesirable for the user.
 
 The cipher specified in the F<SIGNATURE> file's first entry will
-be used to validate its integrity.  For C<SHA1>, the user needs
-to have any one of these four modules installed: B<Digest::SHA>,
-B<Digest::SHA1>, B<Digest::SHA::PurePerl>, or (currently nonexistent)
-B<Digest::SHA1::PurePerl>.
+be used to validate its integrity.  For C<SHA256>, the user needs
+to have either of these two modules installed: B<Digest::SHA> or
+B<Digest::SHA::PurePerl>.
 
 =item $Preamble
 
