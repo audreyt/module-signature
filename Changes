@@ -1,3 +1,9 @@
+[Changes for 0.79 - Mon May 18 23:02:11 CST 2015]
+
+* Restore "cpansign --skip" functionality.
+
+  Contributed by: CLOOS
+
 [Changes for 0.78 - Thu Apr  9 16:58:27 CST 2015]
 
 * Fix verify() use from cpanm and CPAN.pm.
