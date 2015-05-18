@@ -53,7 +53,7 @@ my $cmd = $cmd{substr($op, 0, 1)};
 (system("perldoc $0"), exit) if $cmd eq 'help';
 my @args;
 push @args, (overwrite => '1')	if $cmd eq 'sign';
-push @args, (skip => '0')	unless grep /^-?-?skip/, @ARGV;
+push @args, (skip => '1')	if grep /^-?-?skip/, @ARGV;
 
 if (my $sub = Module::Signature->can($cmd)) {
     if (@ARGV and -e $ARGV[-1]) {
