@@ -183,3 +183,5 @@ END_MESSAGE
 		exit(0);
 	}
 }
+
+__END__
