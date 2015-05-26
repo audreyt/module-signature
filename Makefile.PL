@@ -183,3 +183,4 @@ END_MESSAGE
 		exit(0);
 	}
 }
+__EOF__
