@@ -972,7 +972,10 @@ L<Dist::Zilla::Plugin::Signature>
 
 Audrey Tang E<lt>cpan@audreyt.orgE<gt>
 
-=head1 CC0 1.0 Universal
+=head1 LICENSE
+
+This work is under a B<CC0 1.0 Universal> License, although a portion
+of the documentation (as detailed above) is under the Perl license.
 
 To the extent possible under law, 唐鳳 has waived all copyright and related
 or neighboring rights to Module-Signature.
