@@ -12,6 +12,9 @@ install_script  'script/cpansign';
 build_requires  'Test::More', 0, 'IPC::Run', 0;
 requires        'File::Temp';
 
+# clean generated test files
+clean_files(q{"t/test-dat*"});
+
 # On Win32 (excluding cygwin) we know that IO::Socket::INET,
 # which is needed for keyserver stuff, doesn't work. In fact
 # it potentially hangs forever. So bail out with a N/A on
