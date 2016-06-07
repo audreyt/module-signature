@@ -6,7 +6,6 @@ $|++;
 name            'Module-Signature';
 license         'CC0';
 all_from        'lib/Module/Signature.pm';
-readme_from     'lib/Module/Signature.pm';
 repository      'http://github.com/audreyt/module-signature';
 install_script  'script/cpansign';
 build_requires  'Test::More', 0, 'IPC::Run', 0;
