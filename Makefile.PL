@@ -41,42 +41,15 @@ unless (
 	}
 }
 
-# The list of OpenPGP dependencies (which we use in several places)
-my @OPEN_PGP = qw{
-     MIME::Base64             0
-     Compress::Zlib           0
-     Crypt::CBC               0
-     Crypt::DES               0
-     Crypt::Blowfish          0
-     Crypt::RIPEMD160         0
-     Tie::EncryptedHash       0
-     Class::Loader            0
-     Convert::ASCII::Armour   0
-     Data::Buffer             0.04
-     Digest::MD2              0
-     Math::Pari               0
-     Crypt::Random            0
-     Crypt::Primes            0
-     Crypt::DES_EDE3          0
-     Crypt::DSA               0
-     Crypt::RSA               0
-     Convert::ASN1            0
-     Convert::PEM             0
-     Crypt::OpenPGP           1.00
-};
-
 # Is openpgp currently installed
 if ( can_use('Crypt::OpenPGP') ) {
-	# If OpenPGP is already installed, so relist all the
-	# dependencies so they will upgrade as needed.
-	requires( @OPEN_PGP );
-
+	# Crypt::OpenPGP installed/available, continue on...
 } elsif ( my $gpg = locate_gpg() ) {
 	# We SHOULD have gpg, double-check formally
 	requires_external_bin $gpg;
 } elsif ( can_cc() and $ENV{AUTOMATED_TESTING} ) {
 	# Dive headlong into a full Crypt::OpenPGP install.
-	requires( @OPEN_PGP );
+	requires('Crypt::OpenPGP');
 } else {
 	# Ask the user what to do
 	ask_user();
@@ -179,7 +152,7 @@ END_MESSAGE
 		requires_external_bin 'gpg';
 	} elsif ( $choice == 2 and $option3 == 3 ) {
 		# They want to install Crypt::OpenPGP
-		requires( @OPEN_PGP );
+		requires('Crypt::OpenPGP');
 	} else {
 		# Forget about it...
 		print "Module::Signature is not wanted on this host.\n";
