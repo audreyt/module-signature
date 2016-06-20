@@ -150,8 +150,13 @@ sub _verify {
 
 sub _has_gpg {
     my $gpg = _which_gpg() or return;
-    `$gpg --version` =~ /GnuPG.*?(\S+)\s*$/m or return;
-    return $1;
+    local *HANDLE;
+    open HANDLE, $gpg, '--version';
+    while (<HANDLE>) {
+        /GnuPG.*?(\S+)\s*$/m;
+        return $1 if ($1);
+    }
+    return;
 }
 
 sub _fullcheck {
@@ -231,7 +236,11 @@ sub _which_gpg {
     return $which_gpg if $which_gpg;
 
     for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
-        my $version = `$gpg_bin --version 2>&1`;
+		my $D;
+		open $D, '-|', $gpg_bin, qw(--version --logger-fd 1) or
+		my @list = <$D>;
+		close $D;
+		my $version = join '', @list;
         if( $version && $version =~ /GnuPG/ ) {
             $which_gpg = $gpg_bin;
             return $which_gpg;
@@ -269,8 +278,11 @@ sub _verify_gpg {
         system @cmd;
     }
     else {
-        my $cmd = join ' ', @cmd;
-        $output = `$cmd`;
+        my $handle;
+        open $handle, '-|', @cmd;
+        my @list = <$handle>;
+		close $handle;
+        $output = join('', @list);
     }
     unlink $fh->filename;
 
@@ -291,6 +303,9 @@ sub _keyserver {
     my $scheme = 'x-hkp';
     $scheme = 'hkp' if $version ge '1.2.0';
 
+    if ($KeyServerPort ~= tr/0-9//dr) {
+        die "Invalid keyserver port: $KeyServerPort";
+    }
     return "$scheme://$KeyServer:$KeyServerPort";
 }
 
@@ -308,8 +323,8 @@ sub _verify_crypt_openpgp {
 
     if ($rv->{Validity}) {
         warn 'Signature made ', scalar localtime($rv->{Signature}->timestamp),
-             ' using key ID ', substr(uc(unpack('H*', $rv->{Signature}->key_id)), -8), "\n",
-             "Good signature from \"$rv->{Validity}\"\n" if $Verbose;
+            ' using key ID ', substr(uc(unpack('H*', $rv->{Signature}->key_id)), -8), "\n",
+            "Good signature from \"$rv->{Validity}\"\n" if $Verbose;
     }
     else {
         warn "Cannot verify signature; public key not found\n";
@@ -324,7 +339,7 @@ sub _read_sigfile {
     my $well_formed;
 
     local *D;
-    open D, "< $sigfile" or die "Could not open $sigfile: $!";
+    open D, '<', $sigfile or die "Could not open $sigfile: $!";
 
     if ($] >= 5.006 and <D> =~ /\r/) {
         close D;
@@ -332,7 +347,7 @@ sub _read_sigfile {
         binmode D, ':crlf';
     } else {
         close D;
-        open D, "< $sigfile" or die "Could not open $sigfile: $!";
+        open D, '<', $sigfile or die "Could not open $sigfile: $!";
     }
 
     my $begin = "-----BEGIN PGP SIGNED MESSAGE-----\n";
@@ -363,8 +378,8 @@ sub _compare {
     }
     else {
         local (*D, *S);
-        open S, "< $SIGNATURE" or die "Could not open $SIGNATURE: $!";
-        open D, "| diff -u $SIGNATURE -" or (warn "Could not call diff: $!", return SIGNATURE_MISMATCH);
+        open S, '<', $SIGNATURE or die "Could not open $SIGNATURE: $!";
+        open D, "|-", @('diff', '-u', $SIGNATURE) or (warn "Could not call diff: $!", return SIGNATURE_MISMATCH);
         while (<S>) {
             print D $_ if (1 .. /^-----BEGIN PGP SIGNED MESSAGE-----/);
             print D if (/^Hash: / .. /^$/);
@@ -419,29 +434,35 @@ sub _sign_gpg {
     my $gpg = _which_gpg();
 
     local *D;
-    my $set_key = '';
-    $set_key = "--default-key $AUTHOR" if($AUTHOR);
-    open D, "| $gpg $set_key --clearsign >> $sigfile.tmp" or die "Could not call $gpg: $!";
-    print D $plaintext;
-    close D;
+    my $tempfile = $sigfile . '.tmp';
+    {
+        my $D;
+        my @set_key = ($gpg, '--clearsign', '-o', $tempfile);
+        my @empty = ();
+        @set_key = ('--default-key', $AUTHOR) if($AUTHOR);
+        open $D, "|-", @empty, @set_key or die "Could not call $gpg: $!";
+        print $D $plaintext;
+        my $status = close $D;
+    }
 
-    (-e "$sigfile.tmp" and -s "$sigfile.tmp") or do {
-        unlink "$sigfile.tmp";
-        die "Cannot find $sigfile.tmp, signing aborted.\n";
+    (-e $tempfile and -s $tempfile) or do {
+        unlink $tempfile;
+        die "Cannot find $tempfile, signing aborted.\n";
     };
 
-    open D, "< $sigfile.tmp" or die "Cannot open $sigfile.tmp: $!";
-
-    open S, "> $sigfile" or do {
-        unlink "$sigfile.tmp";
+    my $D;
+    open $D, "<", $tempfile or die "Cannot open $tempfile: $!";
+    my $S;
+    open $S, '>', $sigfile or do {
+        unlink $tempfile;
         die "Could not write to $sigfile: $!";
     };
 
-    print S $Preamble;
-    print S <D>;
+    print $S $Preamble;
+    print $S <D>;
 
-    close S;
-    close D;
+    close $S;
+    close $D;
 
     unlink("$sigfile.tmp");
 
@@ -450,20 +471,21 @@ sub _sign_gpg {
     # This doesn't work because the output from verify goes to STDERR.
     # If I try to redirect it using "--logger-fd 1" it just hangs.
     # WTF?
-    my @verify = `$gpg --batch --verify $SIGNATURE`;
-    while (@verify) {
+    open $D, '|-', $gpg, qw(--batch --verify --logger-fd 1), $SIGNATURE;
+    while (<$D>) {
         if (/key ID ([0-9A-F]+)$/) {
             $key_id = $1;
         } elsif (/signature from "(.+)"$/) {
             $key_name = $1;
         }
     }
-
+    close $D;
     my $found_name;
     my $found_key;
     if (defined $key_id && defined $key_name) {
         my $keyserver = _keyserver($version);
-        while (`$gpg --batch --keyserver=$keyserver --search-keys '$key_name'`) {
+        open $D, $gpg, '--batch', "--keyserver=$keyserver", '--search-keys', $key_name;
+        while (<$D>) {
             if (/^\(\d+\)/) {
                 $found_name = 0;
             } elsif ($found_name) {
@@ -478,7 +500,7 @@ sub _sign_gpg {
                 next;
             }
         }
-
+        close $D;
         unless ($found_key) {
             _warn_non_public_signature($key_name);
         }
@@ -513,7 +535,7 @@ sub _sign_crypt_openpgp {
 
 
     local *D;
-    open D, "> $sigfile" or die "Could not write to $sigfile: $!";
+    open D, '>', $sigfile or die "Could not write to $sigfile: $!";
     print D $Preamble;
     print D $signature;
     close D;
@@ -615,7 +637,7 @@ sub _mkdigest_files {
         }
         else {
             local *F;
-            open F, "< $file" or die "Cannot open $file for reading: $!";
+            open F, '<', $file or die "Cannot open $file for reading: $!";
             if (-B $file) {
                 binmode(F);
                 $obj->addfile(*F);
