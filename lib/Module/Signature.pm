@@ -736,6 +736,12 @@ long as everything is working ok.  Defaults to false.
 The filename for a distribution's signature file.  Defaults to
 C<SIGNATURE>.
 
+=item $AUTHOR
+
+The key ID used for C<gpg> signature. If empty/null/0, C<gpg>'s configured
+default ID will be used for the signature. NOTE: this is used B<only> if
+C<gpg> is available to create the signature.
+
 =item $KeyServer
 
 The OpenPGP key server for fetching the author's public key
@@ -782,6 +788,10 @@ before the actual entries.
 B<Module::Signature> honors these environment variables:
 
 =over 4
+
+=item MODULE_SIGNATURE_AUTHOR
+
+Works like C<$AUTHOR>.
 
 =item MODULE_SIGNATURE_CIPHER
 
