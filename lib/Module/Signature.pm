@@ -22,7 +22,7 @@ use File::Spec;
 
 @EXPORT_OK      = (
     qw(sign verify),
-    qw($SIGNATURE $KeyServer $Cipher $Preamble),
+    qw($SIGNATURE $AUTHOR $KeyServer $Cipher $Preamble),
     (grep { /^[A-Z_]+_[A-Z_]+$/ } keys %Module::Signature::),
 );
 @ISA            = 'Exporter';
