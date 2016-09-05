@@ -11,7 +11,7 @@ configure_requires:
 distribution_type: module
 dynamic_config: 1
 generated_by: 'Module::Install version 1.16'
-license: cc0
+license: unrestricted
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -26,4 +26,4 @@ requires:
   perl: '5.005'
 resources:
   repository: http://github.com/audreyt/module-signature
-version: '0.80'
+version: '0.81'
