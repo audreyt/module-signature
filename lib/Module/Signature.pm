@@ -495,11 +495,22 @@ sub _sign_crypt_openpgp {
     my $ring = Crypt::OpenPGP::KeyRing->new(
         Filename => $pgp->{cfg}->get('SecRing')
     ) or die $pgp->error(Crypt::OpenPGP::KeyRing->errstr);
-    my $kb = $ring->find_keyblock_by_index(-1)
-        or die $pgp->error('Can\'t find last keyblock: ' . $ring->errstr);
+
+    my $uid = '';
+    $uid = $AUTHOR if($AUTHOR);
+
+    my $kb;
+    if ($uid) {
+        $kb = $ring->find_keyblock_by_uid($uid)
+          or die $pgp->error(qq{Can't find '$uid': } . $ring->errstr);
+        }
+    else {
+        $kb = $ring->find_keyblock_by_index(-1)
+          or die $pgp->error(q{Can't find last keyblock: } . $ring->errstr);
+        }
 
     my $cert = $kb->signing_key;
-    my $uid = $cert->uid($kb->primary_uid);
+    $uid = $cert->uid($kb->primary_uid);
     warn "Debug: acquiring signature from $uid\n" if $Debug;
 
     my $signature = $pgp->sign(
@@ -510,7 +521,6 @@ sub _sign_crypt_openpgp {
         Key        => $cert,
         PassphraseCallback => \&Crypt::OpenPGP::_default_passphrase_cb,
     ) or die $pgp->errstr;
-
 
     local *D;
     open D, "> $sigfile" or die "Could not write to $sigfile: $!";
@@ -738,9 +748,9 @@ C<SIGNATURE>.
 
 =item $AUTHOR
 
-The key ID used for C<gpg> signature. If empty/null/0, C<gpg>'s configured
-default ID will be used for the signature. NOTE: this is used B<only> if
-C<gpg> is available to create the signature.
+The key ID used for signature. If empty/null/0, C<gpg>'s configured default ID,
+or the most recently added key within the secret keyring for C<Crypt::OpenPGP>,
+will be used for the signature.
 
 =item $KeyServer
 
