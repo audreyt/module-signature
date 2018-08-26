@@ -20,7 +20,6 @@ use constant CIPHER_UNKNOWN      => -6;
 use ExtUtils::Manifest ();
 use Exporter;
 use File::Spec;
-use version;
 
 @EXPORT_OK      = (
     qw(sign verify),
@@ -345,7 +344,7 @@ sub _read_sigfile {
         if (1 .. ($_ eq $begin)) {
             if (!$found and /signed via the Module::Signature module, version ([0-9\.]+)\./) {
                 $found = 1;
-                if (version->parse($1) < version->parse("0.82")) {
+                if (eval { require version; version->parse($1) < version->parse("0.82") }) {
                     $LegacySigFile = 1;
                     warn "Old $SIGNATURE detected. Please inform the module author to regenerate " .
                          "$SIGNATURE using Module::Signature version 0.82 or newer.\n";

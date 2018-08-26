@@ -1,3 +1,9 @@
+[Changes for 0.82 - Sun Aug 26 23:00:04 CST 2018]
+
+* Fix CRLF handling on Win32. (@niklasholm)
+
+* Default to SHA256 on new hashes as SHA1 is deprecated. (@niklasholm)
+
 [Changes for 0.79 - Mon May 18 23:02:11 CST 2015]
 
 * Restore "cpansign --skip" functionality.
