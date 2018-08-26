@@ -4,7 +4,7 @@ use strict;
 use File::Spec;
 use Test::More;
 use IPC::Run qw(run);
-plan tests => 4;
+plan tests => 6;
 
 $|=1;
 sub _f ($) {File::Spec->catfile(split /\//, shift);}
