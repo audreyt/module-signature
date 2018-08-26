@@ -112,6 +112,14 @@ t/test-datlf-sigold/MANIFEST
 t/test-datlf-sigold/README
 t/test-datlf-sigold/42.gz
 t/test-datlf-sigold/SIGNATURE
+t/test-datmix-signew/MANIFEST
+t/test-datmix-signew/README
+t/test-datmix-signew/42.gz
+t/test-datmix-signew/SIGNATURE
+t/test-datmix-sigold/MANIFEST
+t/test-datmix-sigold/README
+t/test-datmix-sigold/42.gz
+t/test-datmix-sigold/SIGNATURE
 );
 my @paths = map { _f($_) } @files;
 

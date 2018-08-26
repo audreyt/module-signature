@@ -1,11 +1,12 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.81';
+$Module::Signature::VERSION = '0.82';
 
 use 5.005;
 use strict;
 use vars qw($VERSION $SIGNATURE @ISA @EXPORT_OK);
 use vars qw($Preamble $Cipher $Debug $Verbose $Timeout $AUTHOR);
 use vars qw($KeyServer $KeyServerPort $AutoKeyRetrieve $CanKeyRetrieve);
+use vars qw($LegacySigFile);
 
 use constant CANNOT_VERIFY       => '0E0';
 use constant SIGNATURE_OK        => 0;
@@ -19,6 +20,7 @@ use constant CIPHER_UNKNOWN      => -6;
 use ExtUtils::Manifest ();
 use Exporter;
 use File::Spec;
+use version;
 
 @EXPORT_OK      = (
     qw(sign verify),
@@ -33,7 +35,7 @@ $Timeout        = $ENV{MODULE_SIGNATURE_TIMEOUT} || 3;
 $Verbose        = $ENV{MODULE_SIGNATURE_VERBOSE} || 0;
 $KeyServer      = $ENV{MODULE_SIGNATURE_KEYSERVER} || 'pool.sks-keyservers.net';
 $KeyServerPort  = $ENV{MODULE_SIGNATURE_KEYSERVERPORT} || '11371';
-$Cipher         = $ENV{MODULE_SIGNATURE_CIPHER} || 'SHA1';
+$Cipher         = $ENV{MODULE_SIGNATURE_CIPHER} || 'SHA256';
 $Preamble       = << ".";
 This file contains message digests of all files listed in MANIFEST,
 signed via the Module::Signature module, version $VERSION.
@@ -52,6 +54,7 @@ not run its Makefile.PL or Build.PL.
 
 $AutoKeyRetrieve    = 1;
 $CanKeyRetrieve     = undef;
+$LegacySigFile      = 0;
 
 sub _cipher_map {
     my($sigtext) = @_;
@@ -337,8 +340,19 @@ sub _read_sigfile {
 
     my $begin = "-----BEGIN PGP SIGNED MESSAGE-----\n";
     my $end = "-----END PGP SIGNATURE-----\n";
+    my $found = 0;
     while (<D>) {
-        next if (1 .. ($_ eq $begin));
+        if (1 .. ($_ eq $begin)) {
+            if (!$found and /signed via the Module::Signature module, version ([0-9\.]+)\./) {
+                $found = 1;
+                if (version->parse($1) < version->parse("0.82")) {
+                    $LegacySigFile = 1;
+                    warn "Old $SIGNATURE detected. Please inform the module author to regenerate " .
+                         "$SIGNATURE using Module::Signature version 0.82 or newer.\n";
+                }
+            }
+            next;
+        }
         $signature .= $_;
         return "$begin$signature" if $_ eq $end;
     }
@@ -364,7 +378,8 @@ sub _compare {
     else {
         local (*D, *S);
         open S, "< $SIGNATURE" or die "Could not open $SIGNATURE: $!";
-        open D, "| diff -u $SIGNATURE -" or (warn "Could not call diff: $!", return SIGNATURE_MISMATCH);
+        open D, "| diff -u --strip-trailing-cr $SIGNATURE -"
+            or (warn "Could not call diff: $!", return SIGNATURE_MISMATCH);
         while (<S>) {
             print D $_ if (1 .. /^-----BEGIN PGP SIGNED MESSAGE-----/);
             print D if (/^Hash: / .. /^$/);
@@ -626,44 +641,46 @@ sub _mkdigest_files {
         else {
             local *F;
             open F, "< $file" or die "Cannot open $file for reading: $!";
-            if (-B $file) {
-                binmode(F);
-                $obj->addfile(*F);
-                $this_hexdigest = $obj->hexdigest;
-            }
-            elsif ($^O eq 'MSWin32') {
-                $obj->addfile(*F);
-                $this_hexdigest = $obj->hexdigest;
-            }
-            else {
-                # Normalize by hand...
-                local $/;
-                binmode(F);
-                my $input = <F>;
-            VERIFYLOOP: for my $eol ("","\015\012","\012") {
-                    my $lax_input = $input;
-                    if (! length $eol) {
-                        # first try is binary
-                    } else {
-                        my @lines = split /$eol/, $input, -1;
-                        if (grep /[\015\012]/, @lines) {
-                            # oops, apparently not a text file, treat as binary, forget @lines
-                        } else {
-                            my $other_eol = $eol eq "\012" ? "\015\012" : "\012";
-                            $lax_input = join $other_eol, @lines;
-                        }
-                    }
-                    $obj->add($lax_input);
+            if ($LegacySigFile) {
+                if (-B $file) {
+                    binmode(F);
+                    $obj->addfile(*F);
                     $this_hexdigest = $obj->hexdigest;
-                    if ($verify_digest) {
-                        if ($this_hexdigest eq $verify_digest) {
+                }
+                else {
+                    # Normalize by hand...
+                    local $/;
+                    binmode(F);
+                    my $input = <F>;
+                VERIFYLOOP: for my $eol ("","\015\012","\012") {
+                        my $lax_input = $input;
+                        if (! length $eol) {
+                            # first try is binary
+                        } else {
+                            my @lines = split /$eol/, $input, -1;
+                            if (grep /[\015\012]/, @lines) {
+                                # oops, apparently not a text file, treat as binary, forget @lines
+                            } else {
+                                my $other_eol = $eol eq "\012" ? "\015\012" : "\012";
+                                $lax_input = join $other_eol, @lines;
+                            }
+                        }
+                        $obj->add($lax_input);
+                        $this_hexdigest = $obj->hexdigest;
+                        if ($verify_digest) {
+                            if ($this_hexdigest eq $verify_digest) {
+                                last VERIFYLOOP;
+                            }
+                            $obj->reset;
+                        } else {
                             last VERIFYLOOP;
                         }
-                        $obj->reset;
-                    } else {
-                        last VERIFYLOOP;
                     }
                 }
+            } else {
+                binmode(F, ((-B $file) ? ':raw' : ':crlf'));
+                $obj->addfile(*F);
+                $this_hexdigest = $obj->hexdigest;
             }
             $digest{$file} = [$this_cipher, $this_hexdigest];
             $obj->reset;
