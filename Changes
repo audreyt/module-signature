@@ -1,3 +1,7 @@
+[Changes for 0.83 - Wed Aug 29 17:33:12 JST 2018]
+
+* Update META.yml.
+
 [Changes for 0.82 - Sun Aug 26 23:00:04 CST 2018]
 
 * Fix CRLF handling on Win32. (@niklasholm)
