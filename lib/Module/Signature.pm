@@ -435,7 +435,8 @@ sub _sign_gpg {
     local *D;
     my $set_key = '';
     $set_key = qq{--default-key "$AUTHOR"} if($AUTHOR);
-    open D, "| $gpg $set_key --clearsign >> $sigfile.tmp" or die "Could not call $gpg: $!";
+    open D, "| $gpg $set_key --clearsign --openpgp --personal-digest-preferences RIPEMD160 >> $sigfile.tmp"
+        or die "Could not call $gpg: $!";
     print D $plaintext;
     close D;
 
