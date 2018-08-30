@@ -17,6 +17,11 @@ use constant SIGNATURE_MISMATCH  => -4;
 use constant MANIFEST_MISMATCH   => -5;
 use constant CIPHER_UNKNOWN      => -6;
 
+# Enable workaround for RT#126994
+use constant RT126994 => 1;
+use vars qw($Signing);
+$Signing = 0;
+
 use ExtUtils::Manifest ();
 use Exporter;
 use File::Spec;
@@ -248,7 +253,12 @@ sub _which_gpg {
 
     for my $gpg_bin ('gpg', 'gnupg', 'gpg2', 'gnupg2', 'gpg1', 'gnupg1') {
         my $version = `$gpg_bin --version 2>&1`;
-        if( $version && $version =~ /GnuPG/ ) {
+        if( $version && $version =~ /GnuPG.*?(\S+)\s*$/m ) {
+            # This is a workaround for RT#126994 meant to be reverted when no longer
+            # needed. Run git blame on this line to find out which commit that is.
+            if (RT126994 and $Signing) {
+                _vercmp($1, "2.1.15") <= 0 or next;
+            }
             $which_gpg = $gpg_bin;
             return $which_gpg;
         }
@@ -424,6 +434,8 @@ sub sign {
         return unless <STDIN> =~ /[Yy]/;
     }
 
+    $Signing = 1;
+
     if (my $version = _has_gpg()) {
         _sign_gpg($SIGNATURE, $plaintext, $version);
     }
@@ -449,7 +461,7 @@ sub _sign_gpg {
     local *D;
     my $set_key = '';
     $set_key = qq{--default-key "$AUTHOR"} if($AUTHOR);
-    open D, "| $gpg $set_key --clearsign --openpgp --personal-digest-preferences RIPEMD160 >> $sigfile.tmp"
+    open D, "| $gpg $set_key --clearsign --openpgp --personal-digest-preferences SHA1 >> $sigfile.tmp"
         or die "Could not call $gpg: $!";
     print D $plaintext;
     close D;
