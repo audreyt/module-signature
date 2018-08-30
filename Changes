@@ -1,3 +1,7 @@
+[Changes for 0.84 - Thu Aug 30 13:32:10 JST 2018]
+
+* Fix compatibility with Crypt::OpenPGP. (@niklasholm)
+
 [Changes for 0.83 - Wed Aug 29 17:33:12 JST 2018]
 
 * Update META.yml.
