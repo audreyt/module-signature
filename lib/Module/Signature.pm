@@ -150,6 +150,20 @@ sub _verify {
     }
 }
 
+sub _vercmp {
+    my ($lhs, $rhs) = @_;
+    local $@;
+    my $res;
+    eval {
+        require version;
+        $res = version->parse($lhs) <=> version->parse($rhs);
+    };
+    if ($@) {
+        $res = $lhs <=> $rhs;
+    }
+    return $res;
+}
+
 sub _has_gpg {
     my $gpg = _which_gpg() or return;
     `$gpg --version` =~ /GnuPG.*?(\S+)\s*$/m or return;
@@ -232,7 +246,7 @@ sub _which_gpg {
     # Cache it so we don't need to keep checking.
     return $which_gpg if $which_gpg;
 
-    for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
+    for my $gpg_bin ('gpg', 'gnupg', 'gpg2', 'gnupg2', 'gpg1', 'gnupg1') {
         my $version = `$gpg_bin --version 2>&1`;
         if( $version && $version =~ /GnuPG/ ) {
             $which_gpg = $gpg_bin;
@@ -344,7 +358,7 @@ sub _read_sigfile {
         if (1 .. ($_ eq $begin)) {
             if (!$found and /signed via the Module::Signature module, version ([0-9\.]+)\./) {
                 $found = 1;
-                if (eval { require version; version->parse($1) < version->parse("0.82") }) {
+                if (_vercmp($1,"0.82") < 0) {
                     $LegacySigFile = 1;
                     warn "Old $SIGNATURE detected. Please inform the module author to regenerate " .
                          "$SIGNATURE using Module::Signature version 0.82 or newer.\n";
