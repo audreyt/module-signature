@@ -1,0 +1,59 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.84.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It will check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: RIPEMD160
+
+SHA256 9cec751fbdaa4ec3257dd2cabf19dfd23f989ffd682de3eafa9f6020b0099a79 ANDK2018.pub
+SHA256 1847f802a331b202eae02729e828d6b59ef4c6129020660ecd6865b67ec4dfb5 AUDREYT2018.pub
+SHA256 7de2bf0898f4a1e79d92f9e8ae68e7578eeaaff74211cddc0dfdc7996887cdc1 AUTHORS
+SHA256 106e1d686c98264672227b324b19e905325a3b8e30b62e2e8622a4d0a09e2a28 Changes
+SHA256 c0767212c05209c84a1cbd804dc3fb9a05b8ee4ed9770d11bd029348dab032c9 MANIFEST
+SHA256 093c47e35166ca8f4d6cb4a1d51b436809a4fca4bdb43221bd8fb67adac2e425 MANIFEST.SKIP
+SHA256 0fac3c54cc361c8a0c543893f801bc4ce1314d86eaca1c0d4ffc9495f1adb24f META.yml
+SHA256 506100751f91446bce973090403c88aa81762a4880cc57797a10ecbcfb0e22ff Makefile.PL
+SHA256 c9b4cc9f924857b93a081066bdc7f120e537469c1b605e19c1f07296ac07cfdd NIKLASHOLM2018.pub
+SHA256 7c368bf650e83fc80cf9a851565d77a5cd71f243ef8c277a60adfa12253aaef3 PAUSE2019.pub
+SHA256 7cb2f8aba39724e74d4f4018cee110123dfcce3085b619ca5b163fb7ca3d7219 README
+SHA256 8cd77b6a6f370ecdec102298273d50094c515a5f23c5b02b3a31beaa6e799468 inc/Module/Install.pm
+SHA256 cfb98bad08ee4472484697b171e43e750ac29e4759389b4d09f4c3a3ac661a91 inc/Module/Install/Base.pm
+SHA256 6d3cd1903eb6210b0cd001e5baaad2113fc536eede5de5f9c1419237036a27ec inc/Module/Install/Can.pm
+SHA256 d5bbe82c94efc00222d74923f4a1d62889c6673a7d44b0e12e8266c9ca336d2a inc/Module/Install/External.pm
+SHA256 bba66b641eb4d25a67df16bc8b1fd34a4ee9fbdab956081a27d242af69a0847c inc/Module/Install/Fetch.pm
+SHA256 317c01e9ee71e5c3fa61563d82a0c9e22958b68cafd2ce0a70b516f22d4829df inc/Module/Install/Makefile.pm
+SHA256 6eaa52282b49bbb2fc54b137be6ce4f9eda80619a0c14571f4718a37a8aba065 inc/Module/Install/Metadata.pm
+SHA256 a10f0f4ebb579bae28ec5a372c5b7bcdc07df89aa24c04b502e0d0442230f200 inc/Module/Install/Scripts.pm
+SHA256 9cf3940ab15fd196c7b147aea3ab3c18d9ec3fdb3eadb238dc50120185cf81e7 inc/Module/Install/Win32.pm
+SHA256 c6cee30b2053ca28654b3216340169ca97ff2b2bcbb5a1ef7e3b7e3cf593419b inc/Module/Install/WriteAll.pm
+SHA256 bf22b3297ae39975c979e1921aaa2ef77b116a58c5026d8a772ccfceefc22d94 lib/Module/Signature.pm
+SHA256 51aa9c445c6f54c26fc37d5ec2e42535461eb3a78911ca2516dd1c97e7aa7185 script/cpansign
+SHA256 286fda83531d99b34e214b0058ba806a38bdb6317fc3c6ca2f7c5a9840f1c092 t/0-signature.t
+SHA256 9be1e82eed0cb08514d2e3654b1396a23e5dd89ca8a5e67788ac6492697a5ce3 t/1-basic.t
+SHA256 ae0a2706d9dbe8cb3d0c3b948af76c42a9e6138bc21a45a5c82e655a412daf8a t/2-cygwin.t
+SHA256 abdaa7cf0869bf6a08c0c80da3176145243d6989b9522ecff8881a939cba5530 t/3-verify.t
+SHA256 2b17f99fccb7172b580ecde8839860f5db05292ea25391d9ea60839b45d5ac9a t/wrap.pl
+SHA256 1e55d31ce050bd8250d7f5e74afdbb050fdf34834e0925f6992400e6a35ee87a t/wrapped-tests.bin
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBAwAdFiEE8/4umVyeYRTFU5r09ePPSwnTf6gFAluHc7gACgkQ9ePPSwnT
+f6h8MAv/U4IYwPNC56L+eokvNXBUqk6knYF77vSMDi/TuY6/zR6CFNzlrnZH38hB
+f9fKXsmsWT0xuO+awQ/NPYwAo4cfF0pzUF+BpZW1qhaGjRsrSz5QPED9g6YLZlMm
+MiF/jJNfUGVfCy0HLz6jd9rvhoO3xgDgGhcWiWMDH/qyG1skPgpp/rZYZevmOshk
+IiXmykMlqzDdG56MqZpPnCNn3oIhJIJj+LpGQJVr3U38H0pYzUBUKJBxWivs7Npo
+gx3QdYxSvuxDIbYMF0u23mIMMIXL8YPauH8YCJh1J+r8OJ9LZ1Svbrd3AKXIDj57
+WU9k+Jfhq82rrmFR+rnpCWkRQVDrhaX//UPeNNQTdKIcFbCX/h3As7dRTWeNW3Xh
+1KOUtMC6cpaf6KznCCoClY7V01Nyd7pCqhaxAi2iJl0ROLwqQE1ZpV3Kwgy7z/e4
+U1OMkAFCOwXRPyP5nFVQej5se9zZHcIciteuCReJKkAy7nE7ArpysX8Nv+RDrDUt
+wHYNnsNK
+=bpBL
+-----END PGP SIGNATURE-----
