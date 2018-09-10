@@ -1,0 +1,8 @@
+MYMETA.json
+MYMETA.yml
+Makefile
+Module-Signature-*.tar.gz
+blib/
+pm_to_blib
+t/test-datcrlf-*/
+t/test-datlf-*/
