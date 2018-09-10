@@ -793,15 +793,14 @@ Defaults to C<1>.
 =item $Cipher
 
 The default cipher used by the C<Digest> module to make signature
-files.  Defaults to C<SHA1>, but may be changed to other ciphers
-via the C<MODULE_SIGNATURE_CIPHER> environment variable if the SHA1
+files.  Defaults to C<SHA256>, but may be changed to other ciphers
+via the C<MODULE_SIGNATURE_CIPHER> environment variable if the SHA256
 cipher is undesirable for the user.
 
 The cipher specified in the F<SIGNATURE> file's first entry will
-be used to validate its integrity.  For C<SHA1>, the user needs
-to have any one of these four modules installed: B<Digest::SHA>,
-B<Digest::SHA1>, B<Digest::SHA::PurePerl>, or (currently nonexistent)
-B<Digest::SHA1::PurePerl>.
+be used to validate its integrity.  For C<SHA256>, the user needs
+to have either of these two modules installed: B<Digest::SHA> or
+B<Digest::SHA::PurePerl>.
 
 =item $Preamble
 
