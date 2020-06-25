@@ -17,6 +17,11 @@ use constant SIGNATURE_MISMATCH  => -4;
 use constant MANIFEST_MISMATCH   => -5;
 use constant CIPHER_UNKNOWN      => -6;
 
+# Enable workaround for RT#126994
+use constant RT126994 => 1;
+use vars qw($Signing);
+$Signing = 0;
+
 use ExtUtils::Manifest ();
 use Exporter;
 use File::Spec;
@@ -150,6 +155,20 @@ sub _verify {
     }
 }
 
+sub _vercmp {
+    my ($lhs, $rhs) = @_;
+    local $@;
+    my $res;
+    eval {
+        require version;
+        $res = version->parse($lhs) <=> version->parse($rhs);
+    };
+    if ($@) {
+        $res = $lhs <=> $rhs;
+    }
+    return $res;
+}
+
 sub _has_gpg {
     my $gpg = _which_gpg() or return;
     `$gpg --version` =~ /GnuPG.*?(\S+)\s*$/m or return;
@@ -232,9 +251,14 @@ sub _which_gpg {
     # Cache it so we don't need to keep checking.
     return $which_gpg if $which_gpg;
 
-    for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
+    for my $gpg_bin ('gpg', 'gnupg', 'gpg2', 'gnupg2', 'gpg1', 'gnupg1') {
         my $version = `$gpg_bin --version 2>&1`;
-        if( $version && $version =~ /GnuPG/ ) {
+        if( $version && $version =~ /GnuPG.*?(\S+)\s*$/m ) {
+            # This is a workaround for RT#126994 meant to be reverted when no longer
+            # needed. Run git blame on this line to find out which commit that is.
+            if (RT126994 and $Signing) {
+                _vercmp($1, "2.1.15") <= 0 or next;
+            }
             $which_gpg = $gpg_bin;
             return $which_gpg;
         }
@@ -344,7 +368,7 @@ sub _read_sigfile {
         if (1 .. ($_ eq $begin)) {
             if (!$found and /signed via the Module::Signature module, version ([0-9\.]+)\./) {
                 $found = 1;
-                if (eval { require version; version->parse($1) < version->parse("0.82") }) {
+                if (_vercmp($1,"0.82") < 0) {
                     $LegacySigFile = 1;
                     warn "Old $SIGNATURE detected. Please inform the module author to regenerate " .
                          "$SIGNATURE using Module::Signature version 0.82 or newer.\n";
@@ -410,6 +434,8 @@ sub sign {
         return unless <STDIN> =~ /[Yy]/;
     }
 
+    $Signing = 1;
+
     if (my $version = _has_gpg()) {
         _sign_gpg($SIGNATURE, $plaintext, $version);
     }
@@ -435,7 +461,7 @@ sub _sign_gpg {
     local *D;
     my $set_key = '';
     $set_key = qq{--default-key "$AUTHOR"} if($AUTHOR);
-    open D, "| $gpg $set_key --clearsign --openpgp --personal-digest-preferences RIPEMD160 >> $sigfile.tmp"
+    open D, "| $gpg $set_key --clearsign --openpgp --personal-digest-preferences SHA1 >> $sigfile.tmp"
         or die "Could not call $gpg: $!";
     print D $plaintext;
     close D;
