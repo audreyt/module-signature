@@ -746,6 +746,11 @@ before C<make dist>.  Be sure to delete the F<SIGNATURE> file afterwards.
 Please also see L</NOTES> about F<MANIFEST.SKIP> issues, especially if
 you are using B<Module::Build> or writing your own F<MANIFEST.SKIP>.
 
+Signatures made with Module::Signature prior to version 0.82 used the
+SHA1 algorithm by default. SHA1 is now considered broken, and therefore
+module authors are strongly encouraged to regenerate their F<SIGNATURE>
+files. Users verifying old SHA1 signature files will receive a warning.
+
 =head1 VARIABLES
 
 No package variables are exported by default.
@@ -793,15 +798,14 @@ Defaults to C<1>.
 =item $Cipher
 
 The default cipher used by the C<Digest> module to make signature
-files.  Defaults to C<SHA1>, but may be changed to other ciphers
-via the C<MODULE_SIGNATURE_CIPHER> environment variable if the SHA1
+files.  Defaults to C<SHA256>, but may be changed to other ciphers
+via the C<MODULE_SIGNATURE_CIPHER> environment variable if the SHA256
 cipher is undesirable for the user.
 
 The cipher specified in the F<SIGNATURE> file's first entry will
-be used to validate its integrity.  For C<SHA1>, the user needs
-to have any one of these four modules installed: B<Digest::SHA>,
-B<Digest::SHA1>, B<Digest::SHA::PurePerl>, or (currently nonexistent)
-B<Digest::SHA1::PurePerl>.
+be used to validate its integrity.  For C<SHA256>, the user needs
+to have any one of these modules installed: B<Digest::SHA>,
+B<Digest::SHA256>, or B<Digest::SHA::PurePerl>.
 
 =item $Preamble
 
@@ -997,7 +1001,7 @@ Iain Truskett's B<Test::Signature> might be a better choice.
 
 =head1 SEE ALSO
 
-L<Digest>, L<Digest::SHA>, L<Digest::SHA1>, L<Digest::SHA::PurePerl>
+L<Digest>, L<Digest::SHA>, L<Digest::SHA::PurePerl>
 
 L<ExtUtils::Manifest>, L<Crypt::OpenPGP>, L<Test::Signature>
 
