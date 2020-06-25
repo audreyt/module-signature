@@ -62,6 +62,11 @@ VARIABLES
         The filename for a distribution's signature file. Defaults to
         "SIGNATURE".
 
+    $AUTHOR
+        The key ID used for signature. If empty/null/0, "gpg"'s configured
+        default ID, or the most recently added key within the secret keyring
+        for "Crypt::OpenPGP", will be used for the signature.
+
     $KeyServer
         The OpenPGP key server for fetching the author's public key
         (currently only implemented on "gpg", not "Crypt::OpenPGP"). May be
@@ -96,6 +101,9 @@ VARIABLES
 
 ENVIRONMENT
     Module::Signature honors these environment variables:
+
+    MODULE_SIGNATURE_AUTHOR
+        Works like $AUTHOR.
 
     MODULE_SIGNATURE_CIPHER
         Works like $Cipher.
@@ -257,7 +265,10 @@ SEE ALSO
 AUTHORS
     Audrey Tang <cpan@audreyt.org>
 
-CC0 1.0 Universal
+LICENSE
+    This work is under a CC0 1.0 Universal License, although a portion of
+    the documentation (as detailed above) is under the Perl license.
+
     To the extent possible under law, 唐鳳 has waived all copyright and
     related or neighboring rights to Module-Signature.
 
