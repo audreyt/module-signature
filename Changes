@@ -1,10 +1,8 @@
-[Changes for 0.85 - Thu Jun 25 20:49:43 CST 2020]
+[Changes for 0.86 - Thu Jun 25 21:06:24 CST 2020]
 
 * Update PAUSE and ANDK keys to 2020. (@dweekly)
 
 * Update documentation pertaining to SHA1. (@dweekly)
-
-[Changes for 0.84 - Thu Aug 30 13:32:10 JST 2018]
 
 * Fix compatibility with Crypt::OpenPGP. (@niklasholm)
 
