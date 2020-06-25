@@ -1,4 +1,4 @@
-ANDK2018.pub
+ANDK2020.pub
 AUDREYT2018.pub
 AUTHORS
 Changes
@@ -18,7 +18,7 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
 NIKLASHOLM2018.pub
-PAUSE2019.pub
+PAUSE2020.pub
 README
 script/cpansign
 SIGNATURE
