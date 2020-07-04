@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.86';
+$Module::Signature::VERSION = '0.87';
 
 use 5.005;
 use strict;

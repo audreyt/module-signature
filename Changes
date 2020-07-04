@@ -1,3 +1,7 @@
+[Changes for 0.87 - Sat Jul  4 15:04:41 CST 2020]
+
+* Skip 3-verify.t on Crypt::OpenPGP installations. (@pyramation)
+
 [Changes for 0.86 - Thu Jun 25 21:06:24 CST 2020]
 
 * Update PAUSE and ANDK keys to 2020. (@dweekly)
