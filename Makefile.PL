@@ -1,4 +1,6 @@
 use strict;
+use FindBin '$Bin';
+use lib $Bin;
 use inc::Module::Install 0.92;
 
 $|++;
