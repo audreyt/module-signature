@@ -1,3 +1,7 @@
+[Changes for 0.88 - Sat Dec 18 11:34:44 CST 2021]
+
+* Update PAUSE keys to 2022. (@skaji)
+
 [Changes for 0.87 - Sat Jul  4 15:04:41 CST 2020]
 
 * Skip 3-verify.t on Crypt::OpenPGP installations. (@pyramation)
