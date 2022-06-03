@@ -32,7 +32,7 @@ $AUTHOR         = $ENV{MODULE_SIGNATURE_AUTHOR};
 $SIGNATURE      = 'SIGNATURE';
 $Timeout        = $ENV{MODULE_SIGNATURE_TIMEOUT} || 3;
 $Verbose        = $ENV{MODULE_SIGNATURE_VERBOSE} || 0;
-$KeyServer      = $ENV{MODULE_SIGNATURE_KEYSERVER} || 'pool.sks-keyservers.net';
+$KeyServer      = $ENV{MODULE_SIGNATURE_KEYSERVER} || 'keyserver.ubuntu.com';
 $KeyServerPort  = $ENV{MODULE_SIGNATURE_KEYSERVERPORT} || '11371';
 $Cipher         = $ENV{MODULE_SIGNATURE_CIPHER} || 'SHA256';
 $Preamble       = << ".";
@@ -974,7 +974,7 @@ You may add this code as F<t/0-signature.t> in your distribution tree:
                 "Next time around, consider install Module::Signature, ",
                 "so you can verify the integrity of this distribution.\n";
     }
-    elsif (!eval { require Socket; Socket::inet_aton('pool.sks-keyservers.net') }) {
+    elsif (!eval { require Socket; Socket::inet_aton('keyserver.ubuntu.com') }) {
         print "ok 1 # skip ",
                 "Cannot connect to the keyserver\n";
     }
