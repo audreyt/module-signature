@@ -26,4 +26,4 @@ requires:
   perl: '5.005'
 resources:
   repository: http://github.com/audreyt/module-signature
-version: '0.87'
+version: '0.89'
