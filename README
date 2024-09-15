@@ -1,6 +1,9 @@
 NAME
     Module::Signature - Module signature file manipulation
 
+VERSION
+    version 0.90
+
 SYNOPSIS
     As a shell command:
 
@@ -49,6 +52,9 @@ DESCRIPTION
     SHA1 algorithm by default. SHA1 is now considered broken, and therefore
     module authors are strongly encouraged to regenerate their SIGNATURE
     files. Users verifying old SHA1 signature files will receive a warning.
+
+NAME
+    Module::Signature - Module signature file manipulation
 
 VARIABLES
     No package variables are exported by default.
@@ -269,10 +275,19 @@ LICENSE
     This work is under a CC0 1.0 Universal License, although a portion of
     the documentation (as detailed above) is under the Perl license.
 
-    To the extent possible under law, 唐鳳 has waived all copyright and
+    To the extent possible under law, åé³³ has waived all copyright and
     related or neighboring rights to Module-Signature.
 
     This work is published from Taiwan.
 
     <http://creativecommons.org/publicdomain/zero/1.0>
+
+AUTHOR
+    Audrey Tang <cpan@audreyt.org>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2024 by waved.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
 
