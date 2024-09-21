@@ -232,7 +232,7 @@ sub _which_gpg {
     # Cache it so we don't need to keep checking.
     return $which_gpg if $which_gpg;
 
-    for my $gpg_bin ('gpg', 'gpg2', 'gnupg', 'gnupg2') {
+    for my $gpg_bin ('gpg2', 'gpg', 'gnupg2', 'gnupg') {
         my $version = `$gpg_bin --version 2>&1`;
         if( $version && $version =~ /GnuPG/ ) {
             $which_gpg = $gpg_bin;
