@@ -4,11 +4,11 @@ use strict;
 use Test::More;
 
 if (!$ENV{TEST_SIGNATURE}) {
-    plan skip_all => 
+    plan skip_all =>
       "Set the environment variable TEST_SIGNATURE to enable this test.";
 }
 elsif (!eval { require Module::Signature; 1 }) {
-    plan skip_all => 
+    plan skip_all =>
       "Next time around, consider installing Module::Signature, ".
       "so you can verify the integrity of this distribution.";
 }
@@ -28,7 +28,7 @@ else {
 
 my $ret = Module::Signature::verify();
 SKIP: {
-    skip "Module::Signature cannot verify", 1 
+    skip "Module::Signature cannot verify", 1
       if $ret eq Module::Signature::CANNOT_VERIFY();
 
     cmp_ok $ret, '==', Module::Signature::SIGNATURE_OK(), "Valid signature";
