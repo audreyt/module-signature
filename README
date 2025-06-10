@@ -53,6 +53,12 @@ DESCRIPTION
     module authors are strongly encouraged to regenerate their SIGNATURE
     files. Users verifying old SHA1 signature files will receive a warning.
 
+  verify (...)
+    verify a signature file
+
+  sign (...)
+    make signature file - overwrites existing one
+
 NAME
     Module::Signature - Module signature file manipulation
 

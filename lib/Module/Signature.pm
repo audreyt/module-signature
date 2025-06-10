@@ -70,6 +70,12 @@ sub _cipher_map {
     return \%map;
 }
 
+=head2 verify (...)
+
+verify a signature file
+
+=cut
+
 sub verify {
     my %args = ( skip => $ENV{TEST_SIGNATURE}, @_ );
     my $rv;
@@ -392,6 +398,12 @@ sub _compare {
 
     return SIGNATURE_MISMATCH;
 }
+
+=head2 sign (...)
+
+make signature file - overwrites existing one
+
+=cut
 
 sub sign {
     my %args = ( skip => 1, @_ );
