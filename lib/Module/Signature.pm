@@ -332,22 +332,22 @@ sub _read_sigfile {
     my $signature = '';
     my $well_formed;
 
-    local *D;
-    open D, "< $sigfile" or die "Could not open $sigfile: $!";
+    my $sigfile_fh;
+    open ($sigfile_fh, '<', $sigfile) or die "Could not open $sigfile: $!";
 
-    if ($] >= 5.006 and <D> =~ /\r/) {
-        close D;
-        open D, '<', $sigfile or die "Could not open $sigfile: $!";
-        binmode D, ':crlf';
+    if ($] >= 5.006 and <$sigfile_fh> =~ /\r/) {
+        close $sigfile_fh;
+        open ($sigfile_fh, '<', $sigfile) or die "Could not open $sigfile: $!";
+        binmode $sigfile_fh, ':crlf';
     } else {
-        close D;
-        open D, "< $sigfile" or die "Could not open $sigfile: $!";
+        close $sigfile_fh;
+        open ($sigfile_fh, '<', $sigfile) or die "Could not open $sigfile: $!";
     }
 
     my $begin = "-----BEGIN PGP SIGNED MESSAGE-----\n";
     my $end = "-----END PGP SIGNATURE-----\n";
     my $found = 0;
-    while (<D>) {
+    while (<$sigfile_fh>) {
         if (1 .. ($_ eq $begin)) {
             if (!$found and /signed via the Module::Signature module, version ([0-9\.]+)\./) {
                 $found = 1;
@@ -382,18 +382,19 @@ sub _compare {
         warn Text::Diff::diff( \$str1, \$str2, { STYLE => 'Unified' } );
     }
     else {
-        local (*D, *S);
-        open S, "< $SIGNATURE" or die "Could not open $SIGNATURE: $!";
-        open D, "| diff -u --strip-trailing-cr $SIGNATURE -"
+        my $diff_fh;
+        my $signature_fh;
+        open ($signature_fh, '<', $SIGNATURE) or die "Could not open $SIGNATURE: $!";
+        open ($diff_fh, '|-', "diff -u --strip-trailing-cr $SIGNATURE -")
             or (warn "Could not call diff: $!", return SIGNATURE_MISMATCH);
-        while (<S>) {
-            print D $_ if (1 .. /^-----BEGIN PGP SIGNED MESSAGE-----/);
-            print D if (/^Hash: / .. /^$/);
+        while (<$signature_fh>) {
+            print $diff_fh $_ if (1 .. /^-----BEGIN PGP SIGNED MESSAGE-----/);
+            print $diff_fh if (/^Hash: / .. /^$/);
             next if (1 .. /^-----BEGIN PGP SIGNATURE/);
-            print D $str2, "-----BEGIN PGP SIGNATURE-----\n", $_ and last;
+            print $diff_fh $str2, "-----BEGIN PGP SIGNATURE-----\n", $_ and last;
         }
-        print D <S>;
-        close D;
+        print $diff_fh (<$signature_fh>);
+        close $diff_fh;
     }
 
     return SIGNATURE_MISMATCH;
@@ -445,31 +446,33 @@ sub _sign_gpg {
 
     my $gpg = _which_gpg();
 
-    local *D;
+    my $gpg_fh;
     my $set_key = '';
     $set_key = qq{--default-key "$AUTHOR"} if($AUTHOR);
-    open D, "| $gpg $set_key --clearsign --openpgp --personal-digest-preferences RIPEMD160 >> $sigfile.tmp"
+    open ($gpg_fh, '|-', "$gpg $set_key --clearsign --openpgp --personal-digest-preferences RIPEMD160 >> $sigfile.tmp")
         or die "Could not call $gpg: $!";
-    print D $plaintext;
-    close D;
+    print $gpg_fh $plaintext;
+    close $gpg_fh;
 
     (-e "$sigfile.tmp" and -s "$sigfile.tmp") or do {
         unlink "$sigfile.tmp";
         die "Cannot find $sigfile.tmp, signing aborted.\n";
     };
 
-    open D, "< $sigfile.tmp" or die "Cannot open $sigfile.tmp: $!";
+    my $sigfile_tmp_fh;
+    open ($sigfile_tmp_fh, '<', "$sigfile.tmp") or die "Cannot open $sigfile.tmp: $!";
 
-    open S, "> $sigfile" or do {
+    my $sigfile_fh;
+    open ($sigfile_fh, '>', $sigfile) or do {
         unlink "$sigfile.tmp";
         die "Could not write to $sigfile: $!";
     };
 
-    print S $Preamble;
-    print S <D>;
+    print $sigfile_fh $Preamble;
+    print $sigfile_fh (<$sigfile_tmp_fh>);
 
-    close S;
-    close D;
+    close $sigfile_fh;
+    close $sigfile_tmp_fh;
 
     unlink("$sigfile.tmp");
 
@@ -550,11 +553,11 @@ sub _sign_crypt_openpgp {
         PassphraseCallback => \&Crypt::OpenPGP::_default_passphrase_cb,
     ) or die $pgp->errstr;
 
-    local *D;
-    open D, "> $sigfile" or die "Could not write to $sigfile: $!";
-    print D $Preamble;
-    print D $signature;
-    close D;
+    my $sigfile_fh;
+    open ($sigfile_fh, '>', $sigfile) or die "Could not write to $sigfile: $!";
+    print $sigfile_fh $Preamble;
+    print $sigfile_fh $signature;
+    close $sigfile_fh;
 
     require Crypt::OpenPGP::KeyServer;
     my $server = Crypt::OpenPGP::KeyServer->new(Server => $KeyServer);
@@ -652,19 +655,19 @@ sub _mkdigest_files {
             warn "No such file: $file\n" if $Verbose;
         }
         else {
-            local *F;
-            open F, "< $file" or die "Cannot open $file for reading: $!";
+            my $file_fh;
+            open( $file_fh, '<', $file ) or die "Cannot open $file for reading: $!";
             if ($LegacySigFile) {
                 if (-B $file) {
-                    binmode(F);
-                    $obj->addfile(*F);
+                    binmode($file_fh);
+                    $obj->addfile($file_fh);
                     $this_hexdigest = $obj->hexdigest;
                 }
                 else {
                     # Normalize by hand...
                     local $/;
-                    binmode(F);
-                    my $input = <F>;
+                    binmode($file_fh);
+                    my $input = <$file_fh>;
                 VERIFYLOOP: for my $eol ("","\015\012","\012") {
                         my $lax_input = $input;
                         if (! length $eol) {
@@ -691,8 +694,8 @@ sub _mkdigest_files {
                     }
                 }
             } else {
-                binmode(F, ((-B $file) ? ':raw' : ':crlf'));
-                $obj->addfile(*F);
+                binmode($file_fh, ((-B $file) ? ':raw' : ':crlf'));
+                $obj->addfile($file_fh);
                 $this_hexdigest = $obj->hexdigest;
             }
             $digest{$file} = [$this_cipher, $this_hexdigest];
