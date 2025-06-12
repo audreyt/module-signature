@@ -604,13 +604,17 @@ sub _digest_object {
         or die "Malformed algorithm name: $algorithm (should match /\\w+\\d+/)";
 
     my $obj = eval { Digest->new($algorithm) } || eval {
-        require "Digest/$base.pm"; "Digest::$base"->new($variant)
+        my $module = "Digest/$base.pm";
+        require $module; "Digest::$base"->new($variant)
     } || eval {
-        require "Digest/$algorithm.pm"; "Digest::$algorithm"->new
+        my $module = "Digest/$algorithm.pm";
+        require $module; "Digest::$algorithm"->new
     } || eval {
-        require "Digest/$base/PurePerl.pm"; "Digest::$base\::PurePerl"->new($variant)
+        my $module = "Digest/$base/PurePerl.pm";
+        require $module; "Digest::$base\::PurePerl"->new($variant)
     } || eval {
-        require "Digest/$algorithm/PurePerl.pm"; "Digest::$algorithm\::PurePerl"->new
+        my $module = "Digest/$algorithm/PurePerl.pm";
+        require $module; "Digest::$algorithm\::PurePerl"->new
     } or do { eval {
         warn "Unknown cipher: $algorithm, please install Digest::$base, Digest::$base$variant, or Digest::$base\::PurePerl\n";
     } and return } or do {
