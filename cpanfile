@@ -13,6 +13,7 @@ requires "perl" => "5.010";
 requires "strict" => "0";
 requires "vars" => "0";
 requires "version" => "0";
+requires "warnings" => "0";
 
 on 'test' => sub {
   requires "Data::Dumper" => "0";
@@ -25,7 +26,6 @@ on 'test' => sub {
   requires "Socket" => "0";
   requires "Test::More" => "0";
   requires "lib" => "0";
-  requires "warnings" => "0";
 };
 
 on 'configure' => sub {

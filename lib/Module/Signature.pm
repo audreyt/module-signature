@@ -1,8 +1,10 @@
+use 5.005;
+use strict;
+use warnings;
+
 package Module::Signature;
 #VERSION
 
-use 5.005;
-use strict;
 use vars qw($VERSION $SIGNATURE @ISA @EXPORT_OK);
 use vars qw($Preamble $Cipher $Debug $Verbose $Timeout $AUTHOR);
 use vars qw($KeyServer $KeyServerPort $AutoKeyRetrieve $CanKeyRetrieve);

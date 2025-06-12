@@ -27,7 +27,8 @@ my %WriteMakefileArgs = (
     "constant" => 0,
     "strict" => 0,
     "vars" => 0,
-    "version" => 0
+    "version" => 0,
+    "warnings" => 0
   },
   "TEST_REQUIRES" => {
     "Data::Dumper" => 0,
@@ -39,8 +40,7 @@ my %WriteMakefileArgs = (
     "Pod::Usage" => 0,
     "Socket" => 0,
     "Test::More" => 0,
-    "lib" => 0,
-    "warnings" => 0
+    "lib" => 0
   },
   "VERSION" => "0.90",
   "test" => {
