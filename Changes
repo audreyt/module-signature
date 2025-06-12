@@ -1,3 +1,7 @@
+[Changes for 0.90 - Wed Jun 11 21:51:22 ADT 2025]
+
+* Fixes RT#166901: Suspicious fail on signature file with an unexpected empty line
+
 [Changes for 0.89 - Fri Sep 13 21:56:06 ADT 2024] 
 
 * Replace keyserver with keyserver.ubuntu.com (haarg)

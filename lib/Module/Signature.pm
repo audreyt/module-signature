@@ -1,5 +1,5 @@
 package Module::Signature;
-$Module::Signature::VERSION = '0.89';
+$Module::Signature::VERSION = '0.90';
 
 use 5.005;
 use strict;
@@ -62,6 +62,7 @@ sub _cipher_map {
     for my $line (@lines) {
         last if $line eq '-----BEGIN PGP SIGNATURE-----';
         next if $line =~ /^---/ .. $line eq '';
+        next if $line eq '';
         my($cipher,$digest,$file) = split " ", $line, 3;
         return unless defined $file;
         $map{$file} = [$cipher, $digest];
