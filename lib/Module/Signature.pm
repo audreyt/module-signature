@@ -420,7 +420,7 @@ sub sign {
         warn "==> Please correct your MANIFEST file and/or delete extra files. <==\n";
     }
 
-    if (!$overwrite and -e $SIGNATURE and -t STDIN) {
+    if (!$overwrite and -e $SIGNATURE and IO::Interactive::is_interactive()) {
         local $/ = "\n";
         print "$SIGNATURE already exists; overwrite [y/N]? ";
         return unless <STDIN> =~ /[Yy]/;
