@@ -2,6 +2,7 @@ use 5.005;
 use strict;
 use warnings;
 
+# ABSTRACT: Module signature file manipulation
 package Module::Signature;
 #VERSION
 
