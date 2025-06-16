@@ -1,13 +1,6 @@
-# Dist::Zilla::Plugin::MakeMaker::Awesome 0.49.
-# Don't edit it but the dist.ini and plugins used to construct it.
-
-use strict;
-use warnings;
-
-use ExtUtils::MakeMaker;
-
 use FindBin '$Bin';
 use lib $Bin;
+#use Devel::CheckBin;
 
 $|++;
 my %requires;
@@ -41,7 +34,7 @@ unless (
                $requires{'Digest::SHA::PurePerl'} = 0;
        }
 }
-$requires{'Digest::SHA'} = 0;
+
 # Is openpgp currently installed
 if ( can_use ('Crypt::OpenPGP') ) {
        # Crypt::OpenPGP installed/available, continue on...
@@ -64,7 +57,6 @@ unless ( can_run('diff') ) {
        }
    }
 
-   # $args{PREREQ_PM} = \%requires;
 #####################################################################
 # Support Functions
 
@@ -222,50 +214,3 @@ sub requires_external_bin {
         # In the mean time, continue as normal.
         1;
 }
-
-my %WriteMakefileArgs = (
-  "ABSTRACT" => "Module signature file manipulation",
-  "AUTHOR" => "Audrey Tang <cpan\@audreyt.org>",
-  "BUILD_REQUIRES" => {
-    "ExtUtils::MakeMaker" => "6.36",
-    "IPC::Run" => 0,
-    "Test::More" => 0
-  },
-  "CONFIGURE_REQUIRES" => {
-    "ExtUtils::MakeMaker" => "6.36"
-  },
-  "DISTNAME" => "Module-Signature",
-  "LICENSE" => "perl",
-  "NAME" => "Module::Signature",
-  "PREREQ_PM" => {
-    "File::Temp" => 0
-  },
-  "VERSION" => "0.91",
-  "test" => {
-    "TESTS" => "t/*.t"
-  }
-);
-
-%WriteMakefileArgs = (
-    %WriteMakefileArgs,
-    %args,
-    PREREQ_PM => {%{$WriteMakefileArgs{PREREQ_PM}}, %requires},
-);
-
-my %FallbackPrereqs = (
-  "ExtUtils::MakeMaker" => "6.36",
-  "File::Temp" => 0,
-  "IPC::Run" => 0,
-  "Test::More" => 0
-);
-
-unless ( eval { ExtUtils::MakeMaker->VERSION('6.63_03') } ) {
-  delete $WriteMakefileArgs{TEST_REQUIRES};
-  delete $WriteMakefileArgs{BUILD_REQUIRES};
-  $WriteMakefileArgs{PREREQ_PM} = \%FallbackPrereqs;
-}
-
-delete $WriteMakefileArgs{CONFIGURE_REQUIRES}
-  unless eval { ExtUtils::MakeMaker->VERSION(6.52) };
-
-WriteMakefile(%WriteMakefileArgs);
