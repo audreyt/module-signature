@@ -73,12 +73,6 @@ sub _cipher_map {
     return \%map;
 }
 
-=head2 verify (...)
-
-verify a signature file
-
-=cut
-
 sub verify {
     my %args = ( skip => $ENV{TEST_SIGNATURE}, @_ );
     my $rv;
@@ -402,12 +396,6 @@ sub _compare {
 
     return SIGNATURE_MISMATCH;
 }
-
-=head2 sign (...)
-
-make signature file - overwrites existing one
-
-=cut
 
 sub sign {
     my %args = ( skip => 1, @_ );
@@ -1021,6 +1009,8 @@ willing to inflict the dependency of B<Module::Build> on your users,
 Iain Truskett's B<Test::Signature> might be a better choice.
 
 =cut
+
+=for Pod::Coverage sign verify
 
 =head1 SEE ALSO
 
