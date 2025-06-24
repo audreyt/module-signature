@@ -1,3 +1,14 @@
+Revision history for Module::Signature.
+
+{{$NEXT}}
+
+0.91 -- Tue Jun 24 12:18:51 ADT 2025
+
+* Add SECURITY.md policy
+* move to three-arg open
+* Remove spaces from eol
+* Change build process to Dist::Zilla
+
 [Changes for 0.90 - Wed Jun 11 21:51:22 ADT 2025]
 
 * Fixes RT#166901: Suspicious fail on signature file with an unexpected empty line
