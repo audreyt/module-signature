@@ -2,6 +2,14 @@ Revision history for Module::Signature.
 
 {{$NEXT}}
 
+0.92 -- Wed Jun 25 14:29:30 ADT 2025
+
+* Release 0.91-TRIAL as production release.  Includes:
+* Add SECURITY.md policy
+* move to three-arg open
+* Remove spaces from eol
+* Change build process to Dist::Zilla
+
 0.91 -- Tue Jun 24 12:18:51 ADT 2025
 
 * Add SECURITY.md policy
