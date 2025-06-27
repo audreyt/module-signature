@@ -1,6 +1,9 @@
 #!/usr/bin/perl
+use strict;
+use Module::Signature;
 
-$VERSION = '0.06';
+# PODNAME: cpansign
+my $VERSION = '0.07';
 
 =encoding utf8
 
@@ -10,29 +13,26 @@ cpansign - CPAN signature management utility
 
 =head1 SYNOPSIS
 
-    % cpansign		    # verify an existing SIGNATURE, or
-			    # make a new one if none exists 
+    % cpansign              # verify an existing SIGNATURE, or
+                            # make a new one if none exists
 
-    % cpansign file.par	    # verify or sign a PAR file
+    % cpansign file.par     # verify or sign a PAR file
 
-    % cpansign sign	    # make signature; overwrites existing one
-    % cpansign -s	    # same thing
+    % cpansign sign         # make signature; overwrites existing one
+    % cpansign -s           # same thing
 
-    % cpansign verify	    # verify a signature
-    % cpansign -v	    # same thing
+    % cpansign verify       # verify a signature
+    % cpansign -v           # same thing
     % cpansign -v --skip    # ignore files in MANIFEST.SKIP
 
-    % cpansign help	    # display this documentation
-    % cpansign -h	    # same thing
+    % cpansign help         # display this documentation
+    % cpansign -h           # same thing
 
 =head1 DESCRIPTION
 
-This utility lets you create and verify SIGNATURE files. 
+This utility lets you create and verify SIGNATURE files.
 
 =cut
-
-use strict;
-use Module::Signature;
 
 $Module::Signature::Verbose = 1;
 
@@ -52,27 +52,27 @@ if (!$op or $op eq 'skip' or -e $op) {
 my $cmd = $cmd{substr($op, 0, 1)};
 (system("perldoc $0"), exit) if $cmd eq 'help';
 my @args;
-push @args, (overwrite => '1')	if $cmd eq 'sign';
-push @args, (skip => '1')	if grep /^-?-?skip/, @ARGV;
+push @args, (overwrite => '1')    if $cmd eq 'sign';
+push @args, (skip => '1')    if grep /^-?-?skip/, @ARGV;
 
 if (my $sub = Module::Signature->can($cmd)) {
     if (@ARGV and -e $ARGV[-1]) {
-	require PAR::Dist;
-	PAR::Dist::_verify_or_sign(
-	    dist => $ARGV[-1],
-	    $dwim ? () : (action => $cmd, @args)
-	);
+        require PAR::Dist;
+        PAR::Dist::_verify_or_sign(
+            dist => $ARGV[-1],
+            $dwim ? () : (action => $cmd, @args)
+        );
     }
     else {
-	#if ($cmd eq 'sign') {
-	#    exit unless Module::Signature::verify();
-	#}
-	exit($sub->(@args));
+        #if ($cmd eq 'sign') {
+        #    exit unless Module::Signature::verify();
+        #}
+        exit($sub->(@args));
     }
 }
 else {
     die "Unknown command: '$op'.\n".
-	"Available actions: " . (join(', ', sort values %cmd)) .  ".\n";
+        "Available actions: " . (join(', ', sort values %cmd)) .  ".\n";
 }
 
 exit;
