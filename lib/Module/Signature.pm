@@ -469,14 +469,11 @@ sub _sign_gpg {
 
     my $key_id;
     my $key_name;
-    # This doesn't work because the output from verify goes to STDERR.
-    # If I try to redirect it using "--logger-fd 1" it just hangs.
-    # WTF?
-    my @verify = `$gpg --batch --verify $SIGNATURE`;
-    while (@verify) {
-        if (/key ID ([0-9A-F]+)$/) {
+    my @verify = `$gpg --batch --logger-fd 1 --verify $SIGNATURE`;
+    foreach (@verify) {
+        if (/key(?: ID)? ([0-9A-F]+)$/) {
             $key_id = $1;
-        } elsif (/signature from "(.+)"$/) {
+        } elsif (/signature from "(.+)"(?: \[[a-z]+\])?$/) {
             $key_name = $1;
         }
     }
@@ -485,7 +482,7 @@ sub _sign_gpg {
     my $found_key;
     if (defined $key_id && defined $key_name) {
         my $keyserver = _keyserver($version);
-        while (`$gpg --batch --keyserver=$keyserver --search-keys '$key_name'`) {
+        foreach (`$gpg --batch --keyserver=$keyserver --search-keys '$key_name'`) {
             if (/^\(\d+\)/) {
                 $found_name = 0;
             } elsif ($found_name) {
