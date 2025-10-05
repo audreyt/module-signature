@@ -245,6 +245,38 @@ sub _which_gpg {
     }
 }
 
+sub _gpg_get_key_id {
+    my $input = shift;
+
+    my @response = split '\n', $input;
+
+    my $key_id;
+    my $key_name;
+
+    foreach (@response) {
+        if (/using [DR]SA key ([0-9A-F]+)$/) {
+            $key_id = $1;
+        } elsif (/signature from "(.+)".*$/) {
+            $key_name = $1;
+        }
+    }
+    print "Unable to extract key id from:\n", $input, "\n" if ! defined $key_id;
+
+    # If key_name is known the key is likely in the pub keyring
+    $key_id = undef if defined $key_name;
+    return $key_id;
+}
+
+sub _gpg_execute {
+    my ($command) = @_;
+    warn "Executing @{$command}\n" if $Verbose;
+
+    my $cmd = join ' ', @{$command};
+    my $output = `$cmd`;
+    print $output if $Verbose;
+    return $output;
+}
+
 sub _verify_gpg {
     my ($sigtext, $plaintext, $version) = @_;
 
@@ -259,31 +291,43 @@ sub _verify_gpg {
     close $fh;
 
     my $gpg = _which_gpg();
-    my @quiet = $Verbose ? () : qw(-q --logger-fd=1);
-    my @cmd = (
-        $gpg, qw(--verify --batch --no-tty), @quiet, ($KeyServer ? (
-            "--keyserver=$keyserver",
-            ($AutoKeyRetrieve and $version ge '1.0.7')
-                ? '--keyserver-options=auto-key-retrieve'
-                : ()
-        ) : ()), $fh->filename
+    my @quiet = $Verbose ? () : qw(-q);
+    my @verify = (
+        $gpg, qw(--verify --batch --no-tty --logger-fd 1), @quiet,
+                ($KeyServer ? ("--keyserver=$keyserver") : (),
+                $fh->filename
+            )
     );
 
-    my $output = '';
-    if( $Verbose ) {
-        warn "Executing @cmd\n";
-        system @cmd;
-    }
-    else {
-        my $cmd = join ' ', @cmd;
-        $output = `$cmd`;
-    }
-    unlink $fh->filename;
+    my $output = _gpg_execute(\@verify);
 
     if( $? ) {
-        print STDERR $output;
+        if ($AutoKeyRetrieve ) {
+            my $key_id = _gpg_get_key_id($output);
+            if (defined $key_id) {
+                print "gpg: requesting key $key_id from $keyserver\n" if $Verbose;
+                my @recv_keys = (
+                    $gpg, qw(--recv-keys --batch --no-tty), @quiet,
+                        ($KeyServer ? ("--keyserver=$keyserver") : ()),
+                        $key_id
+                );
+
+                # Try to retrieve the key from the server
+                $output = _gpg_execute(\@recv_keys);
+                if (!$?) {
+                    # Try to re-verify the signature again
+                    $output = _gpg_execute(\@verify);
+                }
+            } else {
+                warn "Unable to find key ID\n";
+            }
+        } else {
+            warn "AutoKeyRetrieve is not set.  You will need to download the key.\n";
+        }
     }
-    elsif ($output =~ /((?: +[\dA-F]{4}){10,})/) {
+
+    unlink $fh->filename;
+    if ($output =~ /((?: +[\dA-F]{4}){10,})/) {
         warn "WARNING: This key is not certified with a trusted signature!\n";
         warn "Primary key fingerprint:$1\n";
     }
