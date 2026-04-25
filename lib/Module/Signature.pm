@@ -2,7 +2,7 @@ use 5.005;
 use strict;
 use warnings;
 
-# ABSTRACT: Module signature file manipulation
+# ABSTRACT: DEPRECATED Module signature file manipulation
 package Module::Signature;
 #VERSION
 
@@ -733,6 +733,21 @@ In programs:
 
     # see the CONSTANTS section below
     (verify() == SIGNATURE_OK) or die "failed!";
+
+=head1 DEPRECATION NOTICE
+
+B<Module::Signature> has been deprecated because it does not provide
+the user with the security assurance that its usage would imply.
+
+Module authors, who have used B<Module::Signature>, have not always
+replaced their keys before they expire. Depending on a user's
+configuration it can cause issues with the installation of those modules.
+
+In addition, since it was written, the key server infrastructure has changed
+and the ability to securely find keys has greatly diminished.
+
+Module authors should remove the SIGNATURE file when they upload new versions
+to PAUSE. Module users should uninstall B<Module::Signature>.
 
 =head1 DESCRIPTION
 

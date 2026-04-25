@@ -28,6 +28,22 @@ SYNOPSIS
         # see the CONSTANTS section below
         (verify() == SIGNATURE_OK) or die "failed!";
 
+DEPRECATION NOTICE
+
+    Module::Signature has been deprecated because it does not provide the
+    user with the security assurance that its usage would imply.
+
+    Module authors, who have used Module::Signature, have not always
+    replaced their keys before they expire. Depending on a user's
+    configuration it can cause issues with the installation of those
+    modules.
+
+    In addition, since it was written, the key server infrastructure has
+    changed and the ability to securely find keys has greatly diminished.
+
+    Module authors should remove the SIGNATURE file when they upload new
+    versions to PAUSE. Module users should uninstall Module::Signature.
+
 DESCRIPTION
 
     Module::Signature adds cryptographic authentications to CPAN
