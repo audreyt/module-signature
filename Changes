@@ -2,7 +2,12 @@ Revision history for Module::Signature.
 
 {{$NEXT}}
 
+* Announce deprecation of the module
+* Update change log (forgotten in 0.94)
+
 0.94 -- Sun Apr 26 11:37:00 ADT 2026
+
+* Announce deprecation of the module
 
 0.93 -- Fri Jun 27 16:38:26 ADT 2025
 
