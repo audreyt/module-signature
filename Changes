@@ -2,6 +2,8 @@ Revision history for Module::Signature.
 
 {{$NEXT}}
 
+0.94 -- Sun Apr 26 11:37:00 ADT 2026
+
 0.93 -- Fri Jun 27 16:38:26 ADT 2025
 
 * Fixes Issue #44 - cpansign script not installed with version 0.92
