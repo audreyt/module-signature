@@ -477,16 +477,16 @@ sub _sign_gpg {
             $key_name = $1;
         }
     }
-
     my $found_name;
     my $found_key;
     if (defined $key_id && defined $key_name) {
         my $keyserver = _keyserver($version);
-        foreach (`$gpg --batch --keyserver=$keyserver --search-keys '$key_name'`) {
+        foreach (`$gpg --output - --keyserver=$keyserver --recv-key '$key_id' 2>&1`) {
             if (/^\(\d+\)/) {
                 $found_name = 0;
-            } elsif ($found_name) {
-                if (/key \Q$key_id\E/) {
+            } elsif ($key_id) {
+                my $short_key_id = substr($key_id, (length($key_id) - 16));
+                if (/key \Q$short_key_id\E/) {
                     $found_key = 1;
                     last;
                 }
